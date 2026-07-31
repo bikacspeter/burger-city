@@ -41,6 +41,9 @@ A Dashboardról leolvasott információk alapján nyomon tudjuk követni a ját�
 ![egy random játék](randomgame.png)
 
 # Nézd meg a bemutató videót!
-![Bemutató videó](bemutato_video.MOV)
 
-# JÓ JÁTÉKOT!!
+[![Bemutató videó](https://img.youtube.com/vi/6rbW4y7muXk/maxresdefault.jpg)](https://youtu.be/6rbW4y7muXk)
+
+*Kattints a fenti képre a bemutató videó megtekintéséhez a YouTube-on!*
+
+# JÓ JÁTÉKOT!

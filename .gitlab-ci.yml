@@ -1,0 +1,81 @@
+image: maven:latest
+
+variables:
+  MAVEN_OPTS: "-Dmaven.repo.local=$CI_PROJECT_DIR/.m2/repository"
+  # Enable GitLab Advanced SAST (Ultimate feature)
+  GITLAB_ADVANCED_SAST_ENABLED: true
+
+# Cache and keep downloaded dependencies between CI pipelines
+cache:
+  key: maven-build
+  paths:
+    - .m2/repository
+
+include:
+  # NuGet Dependency Scanning
+  # https://docs.gitlab.com/ee/user/application_security/dependency_scanning/
+  - template: Jobs/Dependency-Scanning.gitlab-ci.yml
+  # Secret Detection
+  # https://docs.gitlab.com/user/application_security/secret_detection/
+  - template: Jobs/Secret-Detection.gitlab-ci.yml
+  # Static Application Security Testing (SAST)
+  # https://docs.gitlab.com/user/application_security/sast/
+  - template: Jobs/SAST.gitlab-ci.yml
+  # Static analysis-based Code Quality evaluation for Java
+  # https://szofttech.inf.elte.hu/components/code-quality-java
+  - component: szofttech.inf.elte.hu/components/code-quality-java/maven@1
+
+build:
+  stage: build
+  script:
+    - mvn -f BurgerCity/pom.xml compile
+
+test:
+  stage: test
+  script:
+    - cd BurgerCity
+    - mvn clean verify
+    - apt-get update -yqq && apt-get install -yqq libxml2-utils
+    - |
+      FILE="target/site/jacoco/jacoco.xml"
+      if [ -f "$FILE" ]; then
+        COVERAGE=$(xmllint --xpath "string(//report/counter[@type='LINE']/@covered)" "$FILE")
+        MISSED=$(xmllint --xpath "string(//report/counter[@type='LINE']/@missed)" "$FILE")
+        TOTAL=$((COVERAGE + MISSED))
+        PERCENT=$((100 * COVERAGE / TOTAL))
+        echo "TOTAL_COVERAGE=$PERCENT%"
+      else
+        echo "TOTAL_COVERAGE=0%"
+      fi
+  artifacts:
+    paths:
+      - BurgerCity/target/surefire-reports/
+      - BurgerCity/target/site/jacoco/
+    reports:
+      junit: BurgerCity/target/surefire-reports/*.xml
+      coverage_report:
+        coverage_format: jacoco
+        path: BurgerCity/target/site/jacoco/jacoco.xml
+  coverage: '/TOTAL_COVERAGE=(\d+)%/'
+
+code_quality_java:
+  before_script:
+    - cd BurgerCity
+  after_script:
+    - ln -s BurgerCity/target target || true
+# Documentation
+
+
+pages:
+  stage: deploy
+  script:
+    - cd BurgerCity
+    - mvn clean site
+    - mkdir -p ../public
+    - cp -r target/site/* ../public/
+  artifacts:
+    paths:
+      - public
+    expire_in: 1 day
+  only:
+    - master

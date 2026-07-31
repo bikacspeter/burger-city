@@ -42,8 +42,6 @@ A Dashboardról leolvasott információk alapján nyomon tudjuk követni a ját�
 
 # Nézd meg a bemutató videót!
 
-[![Bemutató videó](https://img.youtube.com/vi/6rbW4y7muXk/maxresdefault.jpg)](https://youtu.be/6rbW4y7muXk)
+[![Burger City Bemutató Videó](https://img.youtube.com/vi/6rbW4y7muXk/hqdefault.jpg)](https://youtu.be/6rbW4y7muXk)
 
 *Kattints a fenti képre a bemutató videó megtekintéséhez a YouTube-on!*
-
-# JÓ JÁTÉKOT!

@@ -72,7 +72,7 @@ public class SaveManager {
                         });
             }
         } catch (IOException e) {
-            // Fall back to empty list.
+            
             return List.of();
         }
 
@@ -151,8 +151,8 @@ public class SaveManager {
                 if (td == null) continue;
                 TrafficLight tl = new TrafficLight(td.x(), td.y());
                 tl.restore(td.state(), td.timeInState(), td.greenDurationMain(), td.greenDurationCross());
-                // Ensure it's on the map as a placed building.
-                // Do not use gameplay validation during load (it can reject for unrelated reasons).
+                
+                
                 if (!map.placeBuildingForLoad(td.x(), td.y(), tl)) {
                     System.err.println("[SaveManager] WARNING: Failed to restore TrafficLight at (" + td.x() + "," + td.y() + ")");
                 }
@@ -164,8 +164,8 @@ public class SaveManager {
         if (snapshot.vehicles() != null) {
             for (GameSnapshot.VehicleData vd : snapshot.vehicles()) {
                 if (vd == null) continue;
-                // `kind` is stored as the vehicle class simple name by Vehicle.exportSaveData().
-                // Be permissive for older/hand-edited saves (case/spacing/underscores).
+                
+                
                 String rawKind = vd.kind();
                 String kind = (rawKind == null) ? "" : rawKind.trim();
                 String norm = kind.replaceAll("[\\s_-]+", "").toLowerCase(Locale.ROOT);
@@ -176,7 +176,7 @@ public class SaveManager {
                     case "advancedbus" -> new AdvancedBus();
                     case "advancedtruck" -> new AdvancedTruck();
                     default -> {
-                        // Unknown kind fallback to Truck.
+                        
                         yield new Truck();
                     }
                 };
@@ -202,7 +202,7 @@ public class SaveManager {
             return map;
         }
 
-        // Cities
+        
         if (data.cities() != null) {
             for (GameSnapshot.CityData cd : data.cities()) {
                 if (cd == null) continue;
@@ -213,7 +213,7 @@ public class SaveManager {
             }
         }
 
-        // Industries
+        
         if (data.industries() != null) {
             for (GameSnapshot.IndustryData ind : data.industries()) {
                 if (ind == null) continue;
@@ -223,7 +223,7 @@ public class SaveManager {
             }
         }
 
-        // Roads
+        
         if (data.roads() != null) {
             for (GameSnapshot.IntPair p : data.roads()) {
                 if (p == null) continue;
@@ -233,7 +233,7 @@ public class SaveManager {
             }
         }
 
-        // Buildings
+        
         if (data.buildings() != null) {
             for (GameSnapshot.BuildingData bd : data.buildings()) {
                 if (bd == null) continue;
@@ -252,7 +252,7 @@ public class SaveManager {
             }
         }
 
-        // Forests (restore after roads/buildings so we don't block building placement)
+        
         if (data.forests() != null) {
             for (GameSnapshot.ForestData f : data.forests()) {
                 if (f == null) continue;
@@ -338,7 +338,7 @@ public class SaveManager {
                 timeManager.getGameTimeSeconds()
         );
 
-        // Map contents
+        
         List<GameSnapshot.CityData> cities = new ArrayList<>();
         for (City c : map.getCities()) {
             if (c == null) continue;
@@ -382,7 +382,7 @@ public class SaveManager {
 
         GameSnapshot.MapData md = new GameSnapshot.MapData(map.getWidth(), map.getHeight(), cities, industries, roads, buildings, forests);
 
-        // Vehicles
+        
         List<GameSnapshot.VehicleData> vds = new ArrayList<>();
         if (vehicles != null) {
             for (Vehicle v : vehicles) {
@@ -391,7 +391,7 @@ public class SaveManager {
             }
         }
 
-        // Traffic lights
+        
         List<GameSnapshot.TrafficLightData> tls = new ArrayList<>();
         if (trafficLights != null) {
             for (TrafficLight tl : trafficLights) {
@@ -740,7 +740,7 @@ public class SaveManager {
         Object fObj = mapObj.get("forests");
         if (fObj instanceof List<?> list) {
             for (Object item : list) {
-                // Accept either [x,y,trees] (preferred) or {x,y,trees}
+                
                 if (item instanceof List<?> arr) {
                     if (arr.size() < 2) continue;
                     int x = (int) asLong(arr.get(0), 0L);

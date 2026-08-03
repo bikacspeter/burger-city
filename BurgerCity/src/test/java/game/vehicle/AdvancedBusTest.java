@@ -15,7 +15,7 @@ class AdvancedBusTest {
         advancedBus = new AdvancedBus();
     }
 
-    // ==================== Constructor Tests ====================
+    
 
     @Test
     void testConstructorSetsSpeed() {
@@ -38,7 +38,7 @@ class AdvancedBusTest {
         assertTrue(advancedBus instanceof Vehicle);
     }
 
-    // ==================== Can Carry Tests ====================
+    
 
     @Test
     void testCanCarryPassengers() {
@@ -72,17 +72,17 @@ class AdvancedBusTest {
 
     @Test
     void testCanCarryHandlesNullResourceType() {
-        // Should handle null without crashing
+        
         try {
             boolean result = advancedBus.canCarry(null);
-            // Advanced bus should only carry passengers, so null should be false
+            
             assertFalse(result);
         } catch (NullPointerException e) {
-            // NPE is acceptable for null input
+            
         }
     }
 
-    // ==================== All Resource Type Tests ====================
+    
 
     @Test
     void testCanCarryOnlyPassengers() {
@@ -98,7 +98,7 @@ class AdvancedBusTest {
         }
     }
 
-    // ==================== Capacity Tests ====================
+    
 
     @Test
     void testAdvancedBusHasCorrectCapacity() {
@@ -130,7 +130,7 @@ class AdvancedBusTest {
         assertEquals(20, increase);
     }
 
-    // ==================== Speed Tests ====================
+    
 
     @Test
     void testAdvancedBusSpeedIsFasterThanBus() {
@@ -170,7 +170,7 @@ class AdvancedBusTest {
         assertEquals(1, speedIncrease);
     }
 
-    // ==================== Maintenance Cost Tests ====================
+    
 
     @Test
     void testMaintenanceCostIsPositive() {
@@ -196,12 +196,12 @@ class AdvancedBusTest {
         assertEquals(1, costIncrease);
     }
 
-    // ==================== Type Specific Tests ====================
+    
 
     @Test
     void testAdvancedBusIsDistinctFromTruck() {
         Truck truck = new Truck();
-        // Advanced buses and trucks have opposite cargo restrictions
+        
         assertTrue(advancedBus.canCarry(ResourceType.PASSENGERS));
         assertFalse(advancedBus.canCarry(ResourceType.WHEAT));
         assertFalse(truck.canCarry(ResourceType.PASSENGERS));
@@ -210,15 +210,15 @@ class AdvancedBusTest {
 
     @Test
     void testAdvancedBusEffectiveSpeedEqualsSpeed() {
-        // EffectiveSpeed is set in parent constructor before subclass sets speed
-        // After first update it will match
-        assertEquals(2.0, advancedBus.effectiveSpeed); // Default from Vehicle constructor
-        assertEquals(3, advancedBus.speed); // AdvancedBus's speed
+        
+        
+        assertEquals(2.0, advancedBus.effectiveSpeed); 
+        assertEquals(3, advancedBus.speed); 
     }
 
     @Test
     void testAdvancedBusInheritsVehicleMethods() {
-        // Test that inherited methods work
+        
         advancedBus.setPurchasePrice(4000);
         assertEquals(4000, advancedBus.getPurchasePrice());
         assertEquals(2000, advancedBus.getSellValue());
@@ -248,7 +248,7 @@ class AdvancedBusTest {
     void testAdvancedBusAges() {
         advancedBus.spawnAt(0, 0);
         double initialAge = advancedBus.getAgeSeconds();
-        // Simulate some aging
+        
         advancedBus.ageSeconds = 150.0;
         assertEquals(150.0, advancedBus.getAgeSeconds());
         assertTrue(advancedBus.getAgeSeconds() > initialAge);
@@ -266,13 +266,13 @@ class AdvancedBusTest {
         assertTrue(advancedBus.isTooOld());
     }
 
-    // ==================== Comparison Tests ====================
+    
 
     @Test
     void testAdvancedBusVsBusComparison() {
         Bus bus = new Bus();
 
-        // Advanced bus should be better in all stats
+        
         assertTrue(advancedBus.speed > bus.speed,
             "Advanced bus should be faster");
         assertTrue(advancedBus.capacity > bus.capacity,
@@ -280,7 +280,7 @@ class AdvancedBusTest {
         assertTrue(advancedBus.maintenanceCost >= bus.maintenanceCost,
             "Advanced bus should cost more or equal to maintain");
 
-        // But both carry only passengers
+        
         assertEquals(bus.canCarry(ResourceType.PASSENGERS),
             advancedBus.canCarry(ResourceType.PASSENGERS));
         assertEquals(bus.canCarry(ResourceType.WHEAT),
@@ -289,10 +289,10 @@ class AdvancedBusTest {
 
     @Test
     void testAdvancedBusIsPassengerSpecialist() {
-        // Advanced bus should only transport passengers
+        
         assertTrue(advancedBus.canCarry(ResourceType.PASSENGERS));
 
-        // Verify it rejects all goods
+        
         assertFalse(advancedBus.canCarry(ResourceType.WHEAT));
         assertFalse(advancedBus.canCarry(ResourceType.MEAT));
         assertFalse(advancedBus.canCarry(ResourceType.BREAD));
@@ -307,35 +307,35 @@ class AdvancedBusTest {
         Truck truck = new Truck();
         AdvancedTruck advancedTruck = new AdvancedTruck();
 
-        // Advanced bus should have the highest capacity among all vehicles
+        
         assertTrue(advancedBus.capacity >= vehicle.capacity);
         assertTrue(advancedBus.capacity >= bus.capacity);
         assertTrue(advancedBus.capacity >= truck.capacity);
         assertTrue(advancedBus.capacity >= advancedTruck.capacity);
     }
 
-    // ==================== Performance Tests ====================
+    
 
     @Test
     void testAdvancedBusIsUpgrade() {
         Bus basicBus = new Bus();
 
-        // Should be better in performance
+        
         assertTrue(advancedBus.speed > basicBus.speed);
         assertTrue(advancedBus.capacity > basicBus.capacity);
 
-        // But costs more
+        
         assertTrue(advancedBus.maintenanceCost >= basicBus.maintenanceCost);
     }
 
     @Test
     void testAdvancedBusHasBalancedStats() {
-        // Advanced bus should be a powerful vehicle
+        
         assertTrue(advancedBus.speed > 0);
         assertTrue(advancedBus.capacity > 0);
         assertTrue(advancedBus.maintenanceCost > 0);
 
-        // Stats should be reasonable
+        
         assertTrue(advancedBus.speed <= 5);
         assertTrue(advancedBus.capacity <= 100);
         assertTrue(advancedBus.maintenanceCost <= 10);
@@ -345,7 +345,7 @@ class AdvancedBusTest {
     void testAdvancedBusCarriesSameTypesAsBus() {
         Bus bus = new Bus();
 
-        // Should carry same resource types
+        
         for (ResourceType type : ResourceType.values()) {
             assertEquals(bus.canCarry(type), advancedBus.canCarry(type),
                 "Advanced bus and bus should carry same types: " + type);
@@ -363,7 +363,7 @@ class AdvancedBusTest {
     void testAdvancedBusIsPremiumPassengerTransport() {
         Bus bus = new Bus();
 
-        // Advanced bus combines best speed and capacity for passengers
+        
         assertTrue(advancedBus.speed > bus.speed);
         assertTrue(advancedBus.capacity > bus.capacity);
         assertTrue(advancedBus.canCarry(ResourceType.PASSENGERS));
@@ -372,7 +372,7 @@ class AdvancedBusTest {
 
     @Test
     void testAdvancedBusHasReasonableMaintenanceCost() {
-        // Despite being the best passenger vehicle, maintenance should be reasonable
+        
         assertTrue(advancedBus.maintenanceCost <= 5,
             "Maintenance cost should not be excessive");
     }

@@ -27,7 +27,7 @@ public class Vehicle {
     protected double ageSeconds;
     protected double secondsSinceMaintenance;
 
-    // Maintenance state
+    
     protected boolean goingToMaintenance = false;
     protected boolean inMaintenance = false;
     protected double maintenanceSecondsRemaining = 0;
@@ -35,7 +35,7 @@ public class Vehicle {
     protected Integer maintenanceDestRoadX;
     protected Integer maintenanceDestRoadY;
 
-    // Route management
+    
     protected List<int[]> routePathTiles = List.of();
     protected boolean rejoiningRoute = false;
     protected Integer rejoinRouteAtX;
@@ -47,13 +47,13 @@ public class Vehicle {
     protected Resource currentCargo;
     protected Garage garage;
 
-    // Store the buildings this vehicle serves (for cleanup when building is destroyed)
+    
     protected Integer startBuildingOriginX;
     protected Integer startBuildingOriginY;
     protected Integer endBuildingOriginX;
     protected Integer endBuildingOriginY;
 
-    // World-position (pixel) coordinates, centered on tiles
+    
     protected double worldX;
     protected double worldY;
 
@@ -69,7 +69,7 @@ public class Vehicle {
     protected int lastMoveDx;
     protected int lastMoveDy;
 
-    // If set, vehicle will follow this path in order.
+    
     protected List<int[]> pathTiles = List.of();
     protected int pathIndex = 0;
     protected boolean pathForward = true;
@@ -77,19 +77,19 @@ public class Vehicle {
     private boolean arrivedThisUpdate = false;
     private boolean maintenanceRequested = false;
 
-    // Traffic management: direction on current tile (0=none, 1=N, 2=E, 3=S, 4=W)
+    
     protected int currentDirection = 0;
 
-    // UI-only: last non-zero direction used for rendering to avoid flicker.
+    
     private int lastRenderDirection = 0;
-    // Effective speed considering traffic ahead
+    
     protected double effectiveSpeed;
-    // Track when this vehicle started approaching an intersection
+    
     protected Integer intersectionClaimX = null;
     protected Integer intersectionClaimY = null;
 
     public Vehicle() {
-        // Interpreted as tiles per second (converted internally to pixels/sec)
+        
         this.speed = 2;
         this.effectiveSpeed = this.speed;
     }
@@ -119,8 +119,8 @@ public class Vehicle {
     }
 
     public double getMaintenanceIntervalSeconds() {
-        // Older vehicles need maintenance more often.
-        // Starts at ~120s and drops linearly until a minimum.
+        
+        
         double base = 120.0;
         double min = 30.0;
         double interval = base - (ageSeconds * 0.20);
@@ -144,25 +144,25 @@ public class Vehicle {
     }
 
     public boolean isTooOld() {
-        return ageSeconds >= 600.0; // 10 minutes of game-time by default
+        return ageSeconds >= 600.0; 
     }
 
     public int getSellValue() {
         if (purchasePrice <= 0) return 0;
-        // Simple rule: half price.
+        
         return purchasePrice / 2;
     }
 
-    /**
-     * Store the main working route (between the selected buildings).
-     */
+    
+
+
     public void setRoutePath(List<int[]> routePathTiles) {
         this.routePathTiles = (routePathTiles == null) ? List.of() : routePathTiles;
     }
 
-    /**
-     * After reaching (x,y) on the current path, the vehicle will switch back to its stored route.
-     */
+    
+
+
     public void setRejoinRouteAt(int x, int y) {
         this.rejoiningRoute = true;
         this.rejoinRouteAtX = x;
@@ -254,7 +254,7 @@ public class Vehicle {
         this.lastMoveDy = data.lastMoveDy();
         this.currentDirection = data.currentDirection();
 
-        // Path
+        
         List<int[]> newPath = new ArrayList<>();
         if (data.pathTiles() != null) {
             for (GameSnapshot.IntPair p : data.pathTiles()) {
@@ -266,7 +266,7 @@ public class Vehicle {
         this.pathIndex = Math.max(0, data.pathIndex());
         this.pathForward = data.pathForward();
 
-        // Route path
+        
         List<int[]> newRoute = new ArrayList<>();
         if (data.routePathTiles() != null) {
             for (GameSnapshot.IntPair p : data.routePathTiles()) {
@@ -276,12 +276,12 @@ public class Vehicle {
         }
         this.routePathTiles = newRoute;
 
-        // Route rejoin state
+        
         this.rejoiningRoute = data.rejoiningRoute();
         this.rejoinRouteAtX = data.rejoinRouteAtX();
         this.rejoinRouteAtY = data.rejoinRouteAtY();
 
-        // Economy/maintenance state
+        
         this.purchasePrice = Math.max(0, data.purchasePrice());
         this.ageSeconds = Math.max(0.0, data.ageSeconds());
         this.secondsSinceMaintenance = Math.max(0.0, data.secondsSinceMaintenance());
@@ -291,14 +291,14 @@ public class Vehicle {
         this.maintenanceDestRoadX = data.maintenanceDestRoadX();
         this.maintenanceDestRoadY = data.maintenanceDestRoadY();
 
-        // Cargo
+        
         if (data.cargo() != null && data.cargo().type() != null && data.cargo().amount() > 0) {
             this.currentCargo = new Resource(data.cargo().type(), data.cargo().amount());
         } else {
             this.currentCargo = null;
         }
 
-        // Route building origins
+        
         if (data.routeBuildings() != null) {
             this.startBuildingOriginX = data.routeBuildings().startOriginX();
             this.startBuildingOriginY = data.routeBuildings().startOriginY();
@@ -311,7 +311,7 @@ public class Vehicle {
             this.endBuildingOriginY = null;
         }
 
-        // Resolve garages (object references do not survive serialization)
+        
         this.garage = null;
         this.maintenanceGarage = null;
         if (map != null) {
@@ -329,7 +329,7 @@ public class Vehicle {
             }
         }
 
-        // Reset transient fields
+        
         this.arrivedThisUpdate = false;
         this.effectiveSpeed = this.speed;
         this.intersectionClaimX = null;
@@ -352,10 +352,10 @@ public class Vehicle {
         return currentTileY;
     }
 
-    /**
-     * Direction intended for rendering.
-     * 0=none, 1=N, 2=E, 3=S, 4=W.
-     */
+    
+
+
+
     public int getRenderDirection() {
         int planned = 0;
         if (targetTileX != null && targetTileY != null) {
@@ -392,10 +392,10 @@ public class Vehicle {
         this.worldY = tileCenterY(tileY);
     }
 
-    /**
-     * Assign a ROAD-tile path for the vehicle to follow.
-     * If the path is empty/null, the vehicle will remain idle.
-     */
+    
+
+
+
     public void setPath(List<int[]> pathTiles) {
         this.pathTiles = (pathTiles == null) ? List.of() : pathTiles;
         this.pathIndex = 0;
@@ -417,13 +417,13 @@ public class Vehicle {
         return pathTiles != null && !pathTiles.isEmpty();
     }
 
-    /**
-     * Set the buildings this vehicle serves (for tracking when buildings are destroyed).
-     * @param startOriginX Origin X of start building
-     * @param startOriginY Origin Y of start building
-     * @param endOriginX Origin X of end building
-     * @param endOriginY Origin Y of end building
-     */
+    
+
+
+
+
+
+
     public void setRouteBuildings(int startOriginX, int startOriginY, int endOriginX, int endOriginY) {
         this.startBuildingOriginX = startOriginX;
         this.startBuildingOriginY = startOriginY;
@@ -431,9 +431,9 @@ public class Vehicle {
         this.endBuildingOriginY = endOriginY;
     }
 
-    /**
-     * Check if this vehicle serves a building at the given origin coordinates.
-     */
+    
+
+
     public boolean servesBuilding(int originX, int originY) {
         if (startBuildingOriginX != null && startBuildingOriginY != null) {
             if (startBuildingOriginX == originX && startBuildingOriginY == originY) {
@@ -452,48 +452,48 @@ public class Vehicle {
         return currentCargo;
     }
 
-    /**
-     * Move along connected ROAD tiles.
-     * @param map The game map.
-     * @param deltaSeconds Time elapsed since last update.
-     */
+    
+
+
+
+
     public void update(Map map, double deltaSeconds) {
         update(map, deltaSeconds, null, null);
     }
 
-    /**
-     * Move along connected ROAD tiles with traffic awareness.
-     * @param map The game map.
-     * @param deltaSeconds Time elapsed since last update.
-     * @param allVehicles All vehicles in the game for traffic checking (can be null).
-     */
+    
+
+
+
+
+
     public void update(Map map, double deltaSeconds, List<Vehicle> allVehicles) {
         update(map, deltaSeconds, allVehicles, null);
     }
 
-    /**
-     * Move along connected ROAD tiles with traffic awareness and traffic lights.
-     * @param map The game map.
-     * @param deltaSeconds Time elapsed since last update.
-     * @param allVehicles All vehicles in the game for traffic checking (can be null).
-     * @param trafficLights All traffic lights in the game (can be null).
-     */
+    
+
+
+
+
+
+
     public void update(Map map, double deltaSeconds, List<Vehicle> allVehicles, List<game.building.TrafficLight> trafficLights) {
         Objects.requireNonNull(map, "map");
         if (deltaSeconds <= 0) return;
 
-        // Age and maintenance timers always advance (even if idle).
+        
         ageSeconds += deltaSeconds;
         secondsSinceMaintenance += deltaSeconds;
 
-        // If currently in maintenance, just wait it out.
+        
         if (inMaintenance) {
             maintenanceSecondsRemaining -= deltaSeconds;
             if (maintenanceSecondsRemaining <= 0) {
                 inMaintenance = false;
                 maintenanceSecondsRemaining = 0;
                 secondsSinceMaintenance = 0;
-                // After maintenance, try to rejoin the route at its start tile.
+                
                 if (routePathTiles != null && !routePathTiles.isEmpty()) {
                     int[] join = routePathTiles.get(0);
                     List<int[]> toJoin = map.findRoadPathBetweenRoadTiles(currentTileX, currentTileY, join[0], join[1]);
@@ -503,7 +503,7 @@ public class Vehicle {
                         rejoinRouteAtY = join[1];
                         setPath(toJoin);
                     } else {
-                        // Fallback: continue on the stored route (teleport-free switch happens when possible).
+                        
                         switchToRouteAtCurrentTile();
                     }
                 }
@@ -511,14 +511,14 @@ public class Vehicle {
             return;
         }
 
-        // If a previous arrival flagged maintenance, start the garage trip now (next tick).
+        
         if (maintenanceRequested) {
             maintenanceRequested = false;
             startGoingToNearestGarage(map);
             if (goingToMaintenance) return;
         }
 
-        // If we reached the route-join point, switch back to the working route.
+        
         if (rejoiningRoute
                 && rejoinRouteAtX != null && rejoinRouteAtY != null
                 && currentTileX == rejoinRouteAtX && currentTileY == rejoinRouteAtY) {
@@ -528,20 +528,20 @@ public class Vehicle {
             switchToRouteAtCurrentTile();
         }
 
-        // Vehicle only moves when a valid path is assigned.
+        
         if (!hasPath()) {
-            // If maintenance is due and we have garages, we can start going when idle.
+            
             maybeStartMaintenance(map);
             return;
         }
 
-        // If we don't have a target yet, try to acquire one.
+        
         if (targetTileX == null || targetTileY == null) {
             chooseNextTarget(map, allVehicles, trafficLights);
             return;
         }
 
-        // Adjust speed based on traffic ahead
+        
         adjustSpeedForTraffic(allVehicles);
 
         double targetX = tileCenterX(targetTileX);
@@ -550,7 +550,7 @@ public class Vehicle {
         double dy = targetY - worldY;
         double dist = Math.hypot(dx, dy);
 
-        // Arrived (snap).
+        
         if (dist < 0.01) {
             arriveAtTarget(map, allVehicles, trafficLights);
             return;
@@ -608,7 +608,7 @@ public class Vehicle {
         maintenanceDestRoadY = bestRY;
         goingToMaintenance = true;
 
-        // Use a temporary path to the garage. Starts at current tile so no teleport.
+        
         setPath(bestPath);
     }
 
@@ -623,16 +623,16 @@ public class Vehicle {
         this.targetTileY = null;
     }
 
-    /**
-     * Adjust effective speed based on vehicles ahead in the same direction.
-     * If another vehicle is on our target tile in the same direction, we MUST STOP (no overtaking).
-     */
+    
+
+
+
     protected void adjustSpeedForTraffic(List<Vehicle> allVehicles) {
-        effectiveSpeed = speed; // Reset to base speed each tick
+        effectiveSpeed = speed; 
 
         if (allVehicles == null || targetTileX == null || targetTileY == null) return;
 
-        // Calculate our planned direction
+        
         int myPlannedDirection = getPlannedDirection(targetTileX, targetTileY);
         if (myPlannedDirection == 0) myPlannedDirection = currentDirection;
 
@@ -640,26 +640,26 @@ public class Vehicle {
             if (other == this) continue;
             if (!other.isSpawned()) continue;
 
-            // Determine other vehicle's direction
+            
             int otherDirection = other.currentDirection;
             if (otherDirection == 0 && other.targetTileX != null && other.targetTileY != null) {
                 otherDirection = other.getPlannedDirection(other.targetTileX, other.targetTileY);
             }
 
-            // If other is on our target tile in the same direction, we MUST STOP
+            
             if (other.currentTileX == targetTileX && other.currentTileY == targetTileY) {
                 if (otherDirection == myPlannedDirection && otherDirection != 0) {
-                    effectiveSpeed = 0; // STOP - cannot overtake
+                    effectiveSpeed = 0; 
                     return;
                 }
             }
         }
     }
 
-    /**
-     * Minimal economy hook: call after {@link #update(Map, double)}.
-     * Acts when the vehicle arrived at a tile adjacent to a city or industry.
-     */
+    
+
+
+
     public void processArrivalEconomy(Map map, Player player) {
         if (!arrivedThisUpdate) return;
         arrivedThisUpdate = false;
@@ -667,21 +667,21 @@ public class Vehicle {
 
         if (!hasPath() || pathTiles.isEmpty()) return;
 
-        // Check if we're adjacent to any city or industry
+        
         City adjacentCity = findAdjacentCity(map, currentTileX, currentTileY);
         Industry adjacentIndustry = findAdjacentIndustry(map, currentTileX, currentTileY);
 
-        // If not adjacent to anything, don't process
+        
         if (adjacentCity == null && adjacentIndustry == null) return;
 
-        // Find all cities and industries along the route for delivery logic
+        
         City nextCity = findNextCityOnRoute(map);
         Industry nextIndustry = findNextIndustryOnRoute(map);
 
-        // Better priority rules:
-        // - If empty: prefer industry pickup (bus will skip due to canCarry checks).
-        // - If carrying passengers: prefer city dropoff.
-        // - If carrying goods: prefer industry if it consumes it, otherwise city if it demands it.
+        
+        
+        
+        
         if (currentCargo == null || currentCargo.isEmpty()) {
             if (adjacentIndustry != null) handleIndustryInteraction(adjacentIndustry, player, nextCity, nextIndustry);
             if (adjacentCity != null) handleCityInteraction(adjacentCity, player);
@@ -699,7 +699,7 @@ public class Vehicle {
         } else if (adjacentCity != null) {
             handleCityInteraction(adjacentCity, player);
         } else if (adjacentIndustry != null) {
-            // Can't unload here, but still allow potential logic in the future.
+            
             handleIndustryInteraction(adjacentIndustry, player, nextCity, nextIndustry);
         }
     }
@@ -727,13 +727,13 @@ public class Vehicle {
         targetTileX = null;
         targetTileY = null;
 
-        // Update direction based on movement
+        
         updateDirection();
 
-        // Clear intersection claim if we're leaving it
+        
         if (intersectionClaimX != null && intersectionClaimY != null) {
             if (currentTileX != intersectionClaimX || currentTileY != intersectionClaimY) {
-                // We've left the intersection
+                
                 intersectionClaimX = null;
                 intersectionClaimY = null;
             }
@@ -741,7 +741,7 @@ public class Vehicle {
 
         arrivedThisUpdate = true;
 
-        // Maintenance: if we arrived at the garage destination, start maintenance.
+        
         if (goingToMaintenance
                 && maintenanceDestRoadX != null && maintenanceDestRoadY != null
                 && currentTileX == maintenanceDestRoadX && currentTileY == maintenanceDestRoadY) {
@@ -749,14 +749,14 @@ public class Vehicle {
             inMaintenance = true;
             maintenanceSecondsRemaining = 5.0;
 
-            // Park in the garage (idle).
+            
             this.pathTiles = List.of();
             this.targetTileX = null;
             this.targetTileY = null;
             return;
         }
 
-        // If maintenance is due, request it and start the garage trip on the next tick.
+        
         if (getSecondsUntilMaintenanceDue() <= 0 && !goingToMaintenance && !rejoiningRoute) {
             maintenanceRequested = true;
         }
@@ -764,11 +764,11 @@ public class Vehicle {
     }
 
     protected void updateDirection() {
-        if (lastMoveDx == 0 && lastMoveDy == -1) currentDirection = 1; // North
-        else if (lastMoveDx == 1 && lastMoveDy == 0) currentDirection = 2; // East
-        else if (lastMoveDx == 0 && lastMoveDy == 1) currentDirection = 3; // South
-        else if (lastMoveDx == -1 && lastMoveDy == 0) currentDirection = 4; // West
-        else currentDirection = 0; // None/stopped
+        if (lastMoveDx == 0 && lastMoveDy == -1) currentDirection = 1; 
+        else if (lastMoveDx == 1 && lastMoveDy == 0) currentDirection = 2; 
+        else if (lastMoveDx == 0 && lastMoveDy == 1) currentDirection = 3; 
+        else if (lastMoveDx == -1 && lastMoveDy == 0) currentDirection = 4; 
+        else currentDirection = 0; 
     }
 
     protected void chooseNextTarget(Map map) {
@@ -786,11 +786,11 @@ public class Vehicle {
             return;
         }
 
-        // Ensure current index is consistent.
+        
         if (pathIndex < 0) pathIndex = 0;
         if (pathIndex >= pathTiles.size()) pathIndex = pathTiles.size() - 1;
 
-        // If we're not exactly on the expected tile, try to resync.
+        
         int[] expected = pathTiles.get(pathIndex);
         if (expected[0] != currentTileX || expected[1] != currentTileY) {
             int idx = indexOfTile(pathTiles, currentTileX, currentTileY);
@@ -799,10 +799,10 @@ public class Vehicle {
             }
         }
 
-        // Always move forward for circular routes
+        
         int nextIndex = pathIndex + 1;
         if (nextIndex >= pathTiles.size()) {
-            // Wrap back to the beginning for circular routes
+            
             nextIndex = 0;
         }
 
@@ -813,52 +813,52 @@ public class Vehicle {
         }
 
         int[] next = pathTiles.get(nextIndex);
-        // Safety: only move onto ROAD.
+        
         if (!isRoad(map, next[0], next[1])) {
-            // Road is missing! Try to recalculate the route
+            
             if (tryRecalculateRoute(map)) {
-                // Successfully recalculated, try again on next update
+                
                 targetTileX = null;
                 targetTileY = null;
                 return;
             }
-            // No valid route found, stop
+            
             targetTileX = null;
             targetTileY = null;
             return;
         }
 
-        // Calculate what our direction WILL BE when we move to next tile
+        
         int plannedDirection = getPlannedDirection(next[0], next[1]);
 
-        // Check for traffic light at the next tile
+        
         game.building.TrafficLight lightAtNext = findTrafficLightAt(trafficLights, next[0], next[1]);
         if (lightAtNext != null) {
-            // Check if light is red for our direction
+            
             if (!lightAtNext.isGreen(plannedDirection)) {
-                // MUST STOP at red light
+                
                 targetTileX = null;
                 targetTileY = null;
                 return;
             }
         }
 
-        // Check for intersection conflict before setting target
+        
         if (allVehicles != null && isIntersection(map, next[0], next[1])) {
-            // If there's a traffic light, don't use intersection priority rules
+            
             if (lightAtNext == null && hasIntersectionConflict(next[0], next[1], allVehicles, plannedDirection)) {
-                // Wait - don't set target yet
+                
                 targetTileX = null;
                 targetTileY = null;
                 return;
             }
-            // Claim this intersection as ours (only if no traffic light)
+            
             if (lightAtNext == null) {
                 intersectionClaimX = next[0];
                 intersectionClaimY = next[1];
             }
         } else {
-            // Not an intersection or no conflict, clear claim
+            
             intersectionClaimX = null;
             intersectionClaimY = null;
         }
@@ -868,9 +868,9 @@ public class Vehicle {
         pathIndex = nextIndex;
     }
 
-    /**
-     * Find a traffic light at the specified coordinates.
-     */
+    
+
+
     private static game.building.TrafficLight findTrafficLightAt(List<game.building.TrafficLight> trafficLights, int x, int y) {
         if (trafficLights == null) return null;
         for (game.building.TrafficLight light : trafficLights) {
@@ -881,20 +881,20 @@ public class Vehicle {
         return null;
     }
 
-    /**
-     * Check if a tile is an intersection (has more than 2 road neighbors).
-     */
+    
+
+
     protected boolean isIntersection(Map map, int x, int y) {
         if (!isRoad(map, x, y)) return false;
         return roadNeighbors(map, x, y).size() > 2;
     }
 
-    /**
-     * Check if there's a vehicle in the intersection moving on a crossing path.
-     * Returns true if we should wait.
-     * We must wait until ANY vehicle with a crossing path has left the intersection.
-     * First vehicle to claim the intersection gets priority.
-     */
+    
+
+
+
+
+
     protected boolean hasIntersectionConflict(int intersectionX, int intersectionY, List<Vehicle> allVehicles, int plannedDirection) {
         if (allVehicles == null) return false;
         if (plannedDirection == 0) return false;
@@ -903,53 +903,53 @@ public class Vehicle {
             if (other == this) continue;
             if (!other.isSpawned()) continue;
 
-            // Check if other vehicle is in the intersection
+            
             boolean otherInIntersection = (other.currentTileX == intersectionX && other.currentTileY == intersectionY);
 
-            // Check if other vehicle has claimed this intersection (got there first)
+            
             boolean otherClaimedIntersection = (other.intersectionClaimX != null &&
                                                  other.intersectionClaimX == intersectionX &&
                                                  other.intersectionClaimY == intersectionY);
 
             if (otherInIntersection || otherClaimedIntersection) {
-                // Use the other vehicle's current direction
+                
                 int otherDirection = other.currentDirection;
 
-                // If other vehicle doesn't have a direction yet but has a target, calculate it
+                
                 if (otherDirection == 0 && other.targetTileX != null && other.targetTileY != null) {
                     otherDirection = other.getPlannedDirection(other.targetTileX, other.targetTileY);
                 }
 
-                // Check if paths cross
+                
                 if (pathsCross(plannedDirection, otherDirection)) {
-                    return true; // Conflict - we must wait until other leaves
+                    return true; 
                 }
             }
         }
         return false;
     }
 
-    /**
-     * Determine which direction we plan to move when entering the intersection.
-     */
+    
+
+
     protected int getPlannedDirection(int nextTileX, int nextTileY) {
         int dx = nextTileX - currentTileX;
         int dy = nextTileY - currentTileY;
 
-        if (dx == 0 && dy == -1) return 1; // North
-        if (dx == 1 && dy == 0) return 2; // East
-        if (dx == 0 && dy == 1) return 3; // South
-        if (dx == -1 && dy == 0) return 4; // West
+        if (dx == 0 && dy == -1) return 1; 
+        if (dx == 1 && dy == 0) return 2; 
+        if (dx == 0 && dy == 1) return 3; 
+        if (dx == -1 && dy == 0) return 4; 
         return 0;
     }
 
-    /**
-     * Check if two directions cross each other (are perpendicular).
-     * 1=N, 2=E, 3=S, 4=W
-     */
+    
+
+
+
     protected boolean pathsCross(int dir1, int dir2) {
         if (dir1 == 0 || dir2 == 0) return false;
-        // North/South (1,3) crosses East/West (2,4)
+        
         return (dir1 == 1 || dir1 == 3) && (dir2 == 2 || dir2 == 4)
             || (dir1 == 2 || dir1 == 4) && (dir2 == 1 || dir2 == 3);
     }
@@ -1004,7 +1004,7 @@ public class Vehicle {
         if (city == null) return;
 
         if (currentCargo == null || currentCargo.isEmpty()) {
-            // Load passengers only (goods are not produced by cities in this minimal model).
+            
             if (!canCarry(ResourceType.PASSENGERS)) return;
             int taken = city.load(ResourceType.PASSENGERS, Math.max(0, capacity));
             if (taken > 0) {
@@ -1013,7 +1013,7 @@ public class Vehicle {
             return;
         }
 
-        // Unload.
+        
         ResourceType type = currentCargo.getType();
         int amount = currentCargo.getAmount();
         if (amount <= 0) return;
@@ -1031,7 +1031,7 @@ public class Vehicle {
     private void handleIndustryInteraction(Industry industry, Player player, City otherEndpointCity, Industry otherEndpointIndustry) {
         if (industry == null) return;
 
-        // Step 1: Deliver cargo if we have any
+        
         if (currentCargo != null && !currentCargo.isEmpty()) {
             ResourceType type = currentCargo.getType();
             int amount = currentCargo.getAmount();
@@ -1044,9 +1044,9 @@ public class Vehicle {
             }
         }
 
-        // Step 2: Load new cargo if we're now empty
+        
         if (currentCargo == null || currentCargo.isEmpty()) {
-            // Load only produced goods that can be delivered to the other endpoint.
+            
             for (ResourceType type : industry.getProfile().getOutputsPerUnit().keySet()) {
                 if (type == null) continue;
                 if (type == ResourceType.PASSENGERS) continue;
@@ -1101,15 +1101,15 @@ public class Vehicle {
         return null;
     }
 
-    /**
-     * Find the next city along the vehicle's route (looking ahead from current position).
-     */
+    
+
+
     private City findNextCityOnRoute(Map map) {
         if (!hasPath()) return null;
         int currentIdx = indexOfTile(pathTiles, currentTileX, currentTileY);
         if (currentIdx < 0) return null;
 
-        // Search forward along the path
+        
         for (int i = 1; i < pathTiles.size(); i++) {
             int idx = (currentIdx + i) % pathTiles.size();
             int[] tile = pathTiles.get(idx);
@@ -1119,15 +1119,15 @@ public class Vehicle {
         return null;
     }
 
-    /**
-     * Find the next industry along the vehicle's route (looking ahead from current position).
-     */
+    
+
+
     private Industry findNextIndustryOnRoute(Map map) {
         if (!hasPath()) return null;
         int currentIdx = indexOfTile(pathTiles, currentTileX, currentTileY);
         if (currentIdx < 0) return null;
 
-        // Search forward along the path
+        
         for (int i = 1; i < pathTiles.size(); i++) {
             int idx = (currentIdx + i) % pathTiles.size();
             int[] tile = pathTiles.get(idx);
@@ -1137,16 +1137,16 @@ public class Vehicle {
         return null;
     }
 
-    /**
-     * Try to recalculate the route when the current path is blocked.
-     * Finds all cities/industries along the original route and rebuilds the circular path.
-     * @return true if recalculation succeeded, false otherwise
-     */
+    
+
+
+
+
     private boolean tryRecalculateRoute(Map map) {
         if (map == null) return false;
         if (routePathTiles == null || routePathTiles.isEmpty()) return false;
 
-        // Find all unique buildings (cities/industries) along the original route
+        
         java.util.Set<String> seenBuildings = new java.util.HashSet<>();
         java.util.List<Object> buildings = new java.util.ArrayList<>();
 
@@ -1170,21 +1170,21 @@ public class Vehicle {
             }
         }
 
-        // Need at least 2 buildings to make a route
+        
         if (buildings.size() < 2) return false;
 
-        // Find the next building in the route from current position
+        
         Object nextBuilding = findNextBuildingFromCurrent(buildings);
         if (nextBuilding == null) nextBuilding = buildings.get(0);
 
-        // Reorder buildings to start from nextBuilding
+        
         java.util.List<Object> reorderedBuildings = new java.util.ArrayList<>();
         int startIdx = buildings.indexOf(nextBuilding);
         for (int i = 0; i < buildings.size(); i++) {
             reorderedBuildings.add(buildings.get((startIdx + i) % buildings.size()));
         }
 
-        // Step 1: Find path from current position to the first building
+        
         Object firstBuilding = reorderedBuildings.get(0);
         int[] firstCoords = getBuildingCoords(firstBuilding);
         int[] firstSize = getBuildingSize(firstBuilding);
@@ -1194,7 +1194,7 @@ public class Vehicle {
             firstCoords[0], firstCoords[1]
         );
 
-        // If we can't find a direct path to first building, try adjacent road tiles
+        
         if (pathToFirst == null || pathToFirst.isEmpty()) {
             java.util.List<int[]> adjacentRoads = map.adjacentRoadTilesForArea(
                 firstCoords[0], firstCoords[1], firstSize[0], firstSize[1]
@@ -1210,7 +1210,7 @@ public class Vehicle {
 
         if (pathToFirst == null || pathToFirst.isEmpty()) return false;
 
-        // Step 2: Build the full circular route starting from first building
+        
         java.util.List<int[]> fullCircularRoute = new java.util.ArrayList<>();
 
         for (int i = 0; i < reorderedBuildings.size(); i++) {
@@ -1242,32 +1242,32 @@ public class Vehicle {
 
         if (fullCircularRoute.isEmpty()) return false;
 
-        // Step 3: Set the new path - start with pathToFirst, then continue with circular route
+        
         java.util.List<int[]> newPath = new java.util.ArrayList<>(pathToFirst);
 
-        // Find where pathToFirst connects to fullCircularRoute and continue from there
+        
         int[] lastOfPathToFirst = pathToFirst.get(pathToFirst.size() - 1);
         int connectionIdx = indexOfTile(fullCircularRoute, lastOfPathToFirst[0], lastOfPathToFirst[1]);
 
         if (connectionIdx >= 0) {
-            // Add the rest of the circular route starting from connection point
+            
             for (int i = connectionIdx + 1; i < fullCircularRoute.size(); i++) {
                 newPath.add(fullCircularRoute.get(i));
             }
-            // Add the beginning part to complete the circle
+            
             for (int i = 0; i <= connectionIdx; i++) {
                 newPath.add(fullCircularRoute.get(i));
             }
         } else {
-            // Connection not found, just append the full circular route
+            
             newPath.addAll(fullCircularRoute);
         }
 
-        // Update paths
-        this.routePathTiles = fullCircularRoute; // Keep the full circular route for future recalculations
-        this.pathTiles = newPath; // Current path includes the rejoin segment
+        
+        this.routePathTiles = fullCircularRoute; 
+        this.pathTiles = newPath; 
 
-        // Vehicle is at the start of the new path
+        
         this.pathIndex = 0;
         this.rejoiningRoute = true;
         this.rejoinRouteAtX = lastOfPathToFirst[0];
@@ -1276,11 +1276,11 @@ public class Vehicle {
         return true;
     }
 
-    /**
-     * Find the next building ahead on the route from current position.
-     */
+    
+
+
     private Object findNextBuildingFromCurrent(java.util.List<Object> buildings) {
-        // Try to find which building we were heading towards
+        
         for (int i = pathIndex; i < Math.min(pathIndex + 20, pathTiles.size()); i++) {
             int[] tile = pathTiles.get(i);
             for (Object building : buildings) {

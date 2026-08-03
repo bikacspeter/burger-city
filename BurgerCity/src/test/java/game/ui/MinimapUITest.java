@@ -30,7 +30,7 @@ class MinimapUITest {
         MinimapUI minimap = new MinimapUI(map, camera, navigations::incrementAndGet);
         minimap.setSize(200, 100);
 
-        // Click near bottom-right.
+        
         int clickX = 199;
         int clickY = 99;
 
@@ -55,7 +55,7 @@ class MinimapUITest {
         double worldX = clickX / scaleX;
         double worldY = clickY / scaleY;
 
-        // Camera.centerOnWorld clamps internally; reproduce expected clamped camera position.
+        
         double desiredX = worldX - camera.getViewportWidth() / 2.0;
         double desiredY = worldY - camera.getViewportHeight() / 2.0;
         double maxX = Math.max(0.0, worldW * camera.getZoom() - camera.getViewportWidth());
@@ -66,7 +66,7 @@ class MinimapUITest {
         assertEquals(expectedX, camera.getX(), 1e-6);
         assertEquals(expectedY, camera.getY(), 1e-6);
 
-        // Drag to top-left should navigate again and clamp to 0,0.
+        
         MouseEvent drag = new MouseEvent(
                 minimap,
                 MouseEvent.MOUSE_DRAGGED,

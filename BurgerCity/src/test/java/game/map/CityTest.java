@@ -18,7 +18,7 @@ class CityTest {
         city = new City("TestCity", 10, 20, 5, 5);
     }
 
-    // ==================== Constructor Tests ====================
+    
 
     @Test
     void testConstructorSetsName() {
@@ -39,7 +39,7 @@ class CityTest {
 
     @Test
     void testConstructorCalculatesPopulation() {
-        // Population = width * height * 120
+        
         int expectedPopulation = 5 * 5 * 120;
         assertEquals(expectedPopulation, city.getPopulation());
     }
@@ -95,7 +95,7 @@ class CityTest {
         assertTrue(goodsPerSecond.containsKey(ResourceType.HAMBURGER));
     }
 
-    // ==================== Population Tests ====================
+    
 
     @Test
     void testPopulationBasedOnSize() {
@@ -111,7 +111,7 @@ class CityTest {
         assertTrue(city.getPopulation() >= 0);
     }
 
-    // ==================== Occupies Tests ====================
+    
 
     @Test
     void testOccupiesReturnsTrueForOrigin() {
@@ -125,7 +125,7 @@ class CityTest {
 
     @Test
     void testOccupiesReturnsTrueForEdges() {
-        assertTrue(city.occupies(14, 24)); // width-1, height-1
+        assertTrue(city.occupies(14, 24)); 
     }
 
     @Test
@@ -138,9 +138,9 @@ class CityTest {
 
     @Test
     void testOccupiesReturnsFalseForBoundaryEdge() {
-        // originX + width = 15, so x=15 is outside
+        
         assertFalse(city.occupies(15, 20));
-        // originY + height = 25, so y=25 is outside
+        
         assertFalse(city.occupies(10, 25));
     }
 
@@ -148,11 +148,11 @@ class CityTest {
     void testOccupiesWithNegativeCoordinates() {
         City negCity = new City("Neg", -10, -10, 5, 5);
         assertTrue(negCity.occupies(-10, -10));
-        assertTrue(negCity.occupies(-6, -6)); // -10+4, -10+4
+        assertTrue(negCity.occupies(-6, -6)); 
         assertFalse(negCity.occupies(-11, -10));
     }
 
-    // ==================== Update Tests ====================
+    
 
     @Test
     void testUpdateWithZeroDeltaDoesNothing() {
@@ -176,11 +176,11 @@ class CityTest {
 
     @Test
     void testUpdateGeneratesDemandBacklog() {
-        // Demand generation is very slow for small cities, update for a long time
+        
         for (int i = 0; i < 1000; i++) {
             city.update(1.0);
         }
-        // At minimum, demand should have accumulated over 1000 seconds
+        
         assertTrue(city.getDemandBacklog().get(ResourceType.HAMBURGER) >= 0);
     }
 
@@ -208,7 +208,7 @@ class CityTest {
 
     @Test
     void testUpdateWithSmallDeltaEventuallyProducesPassengers() {
-        for (int i = 0; i < 5000; i++) { // More iterations needed
+        for (int i = 0; i < 5000; i++) { 
             city.update(0.01);
         }
         assertTrue(city.getWaiting().get(ResourceType.PASSENGERS) > 0);
@@ -223,11 +223,11 @@ class CityTest {
         }
 
         double finalRate = city.getPassengersPerSecond();
-        // Rate may have changed due to drift/noise
+        
         assertTrue(finalRate > 0);
     }
 
-    // ==================== Load Tests ====================
+    
 
     @Test
     void testLoadPassengersWhenAvailable() {
@@ -281,7 +281,7 @@ class CityTest {
         assertEquals(0, loaded);
     }
 
-    // ==================== Deliver Tests ====================
+    
 
     @Test
     void testDeliverPassengersAlwaysAccepted() {
@@ -343,27 +343,27 @@ class CityTest {
     void testDeliverOtherResourceTypes() {
         city.update(10.0);
 
-        // Cities don't demand wheat, so delivery should be 0
+        
         int deliveredWheat = city.deliver(ResourceType.WHEAT, 10);
         assertEquals(0, deliveredWheat);
     }
 
-    // ==================== Backwards Compatibility Tests ====================
+    
 
     @Test
     void testGeneratePassengersMethod() {
         city.generatePassengers();
-        // Should generate some passengers (equivalent to update(1.0))
+        
         assertTrue(city.getWaiting().get(ResourceType.PASSENGERS) >= 0);
     }
 
     @Test
     void testAcceptGoodsMethod() {
-        // Should not throw exception
+        
         city.acceptGoods();
     }
 
-    // ==================== Rate Tests ====================
+    
 
     @Test
     void testPassengersPerSecondInReasonableRange() {
@@ -384,8 +384,8 @@ class CityTest {
         City smallCity = new City("Small", 0, 0, 3, 3);
         City largeCity = new City("Large", 0, 0, 10, 10);
 
-        // Initially, larger city should have higher rate
-        // (may vary due to randomness, but generally true)
+        
+        
         assertTrue(largeCity.getPopulation() > smallCity.getPopulation());
     }
 
@@ -393,30 +393,30 @@ class CityTest {
     void testGoodsPerSecondIsUnmodifiable() {
         Map<ResourceType, Double> goodsRates = city.getGoodsPerSecond();
 
-        // Should not be able to modify the returned map
+        
         assertThrows(UnsupportedOperationException.class, () -> {
             goodsRates.put(ResourceType.BREAD, 1.0);
         });
     }
 
-    // ==================== Integration Tests ====================
+    
 
     @Test
     void testCityLifecycle() {
-        // Simulate a city over time
-        for (int i = 0; i < 100; i++) { // More iterations for accumulation
+        
+        for (int i = 0; i < 100; i++) { 
             city.update(1.0);
         }
 
-        // Should have generated passengers and demand
+        
         assertTrue(city.getWaiting().get(ResourceType.PASSENGERS) > 0);
         assertTrue(city.getDemandBacklog().get(ResourceType.HAMBURGER) > 0);
 
-        // Load some passengers
+        
         int passengers = city.load(ResourceType.PASSENGERS, 100);
         assertTrue(passengers > 0);
 
-        // Deliver some goods
+        
         int delivered = city.deliver(ResourceType.HAMBURGER, 100);
         assertTrue(delivered > 0);
     }
@@ -431,12 +431,12 @@ class CityTest {
             city2.update(0.1);
         }
 
-        // Different coordinates should lead to different random behavior
-        // (may occasionally be equal due to randomness, but unlikely)
+        
+        
         double rate1 = city1.getPassengersPerSecond();
         double rate2 = city2.getPassengersPerSecond();
 
-        // Just verify both are valid rates
+        
         assertTrue(rate1 > 0);
         assertTrue(rate2 > 0);
     }
@@ -446,17 +446,17 @@ class CityTest {
         City city1 = new City("TestCity", 5, 5, 5, 5);
         City city2 = new City("TestCity", 5, 5, 5, 5);
 
-        // Same name and coordinates should produce same random seed
+        
         for (int i = 0; i < 50; i++) {
             city1.update(0.1);
             city2.update(0.1);
         }
 
-        // Should have very similar behavior
+        
         assertEquals(city1.getPassengersPerSecond(), city2.getPassengersPerSecond(), 0.001);
     }
 
-    // ==================== Edge Case Tests ====================
+    
 
     @Test
     void testCityAtZeroCoordinates() {
@@ -490,9 +490,9 @@ class CityTest {
     @Test
     void testVeryLongUpdatePeriod() {
         city.update(1000.0);
-        // Should generate many passengers - demand may be very slow for small city
+        
         assertTrue(city.getWaiting().get(ResourceType.PASSENGERS) > 10);
-        // Demand backlog should at least be non-negative
+        
         assertTrue(city.getDemandBacklog().get(ResourceType.HAMBURGER) >= 0);
     }
 
@@ -501,7 +501,7 @@ class CityTest {
         ResourceInventory waiting1 = city.getWaiting();
         ResourceInventory waiting2 = city.getWaiting();
 
-        // Should return the same object
+        
         assertSame(waiting1, waiting2);
     }
 }

@@ -32,7 +32,7 @@ class VehicleTest {
         map = createTestMap();
     }
 
-    // ==================== Constructor Tests ====================
+    
 
     @Test
     void testConstructorSetsDefaultSpeed() {
@@ -44,7 +44,7 @@ class VehicleTest {
         assertEquals(vehicle.speed, vehicle.effectiveSpeed);
     }
 
-    // ==================== Purchase Price Tests ====================
+    
 
     @Test
     void testSetPurchasePrice() {
@@ -70,7 +70,7 @@ class VehicleTest {
         assertEquals(0, vehicle.getSellValue());
     }
 
-    // ==================== Garage Tests ====================
+    
 
     @Test
     void testSetHomeGarage() {
@@ -89,7 +89,7 @@ class VehicleTest {
         assertNull(vehicle.getMaintenanceGarage());
     }
 
-    // ==================== Age and Maintenance Tests ====================
+    
 
     @Test
     void testGetAgeSecondsInitiallyZero() {
@@ -169,7 +169,7 @@ class VehicleTest {
         assertFalse(vehicle.needsMaintenance());
     }
 
-    // ==================== Spawn and Position Tests ====================
+    
 
     @Test
     void testIsSpawnedInitiallyFalse() {
@@ -216,7 +216,7 @@ class VehicleTest {
         assertTrue(vehicle.isSpawned());
     }
 
-    // ==================== Path Tests ====================
+    
 
     @Test
     void testHasPathInitiallyFalse() {
@@ -272,7 +272,7 @@ class VehicleTest {
         assertEquals(10, vehicle.rejoinRouteAtY);
     }
 
-    // ==================== Route Buildings Tests ====================
+    
 
     @Test
     void testSetRouteBuildings() {
@@ -306,7 +306,7 @@ class VehicleTest {
         assertFalse(vehicle.servesBuilding(1, 2));
     }
 
-    // ==================== Cargo Tests ====================
+    
 
     @Test
     void testGetCurrentCargoInitiallyNull() {
@@ -318,7 +318,7 @@ class VehicleTest {
         assertTrue(vehicle.canCarry(ResourceType.WHEAT));
     }
 
-    // ==================== Direction Tests ====================
+    
 
     @Test
     void testGetRenderDirectionInitiallyZero() {
@@ -394,7 +394,7 @@ class VehicleTest {
         assertFalse(vehicle.pathsCross(0, 0));
     }
 
-    // ==================== Update Tests ====================
+    
 
     @Test
     void testUpdateWithNullMapThrowsException() {
@@ -471,7 +471,7 @@ class VehicleTest {
         assertEquals(initialY, vehicle.getWorldY(), 0.01);
     }
 
-    // ==================== Movement Tests ====================
+    
 
     @Test
     void testVehicleMovesAlongPath() {
@@ -479,11 +479,11 @@ class VehicleTest {
         List<int[]> path = List.of(new int[]{0, 0}, new int[]{1, 0}, new int[]{2, 0});
         vehicle.setPath(path);
 
-        // Vehicle starts at first tile
+        
         assertEquals(0, vehicle.getCurrentTileX());
         assertEquals(0, vehicle.getCurrentTileY());
 
-        // After path is set, vehicle should be spawned
+        
         assertTrue(vehicle.isSpawned());
     }
 
@@ -493,7 +493,7 @@ class VehicleTest {
         List<int[]> path = List.of(new int[]{0, 0}, new int[]{1, 0});
         vehicle.setPath(path);
 
-        // Verify path was set correctly
+        
         assertTrue(vehicle.hasPath());
         assertEquals(0, vehicle.getCurrentTileX());
         assertEquals(0, vehicle.getCurrentTileY());
@@ -505,7 +505,7 @@ class VehicleTest {
         List<int[]> path = List.of(new int[]{0, 0}, new int[]{1, 0}, new int[]{2, 0});
         vehicle.setPath(path);
 
-        // Verify circular path can be set up
+        
         assertTrue(vehicle.hasPath());
         assertEquals(3, vehicle.pathTiles.size());
     }
@@ -550,7 +550,7 @@ class VehicleTest {
         assertEquals(0, vehicle.currentDirection);
     }
 
-    // ==================== Traffic Tests ====================
+    
 
     @Test
     void testAdjustSpeedForTrafficNoVehicles() {
@@ -566,11 +566,11 @@ class VehicleTest {
         vehicle.spawnAt(0, 0);
         vehicle.targetTileX = 1;
         vehicle.targetTileY = 0;
-        vehicle.currentDirection = 2; // East
+        vehicle.currentDirection = 2; 
 
         Vehicle otherVehicle = new Vehicle();
         otherVehicle.spawnAt(1, 0);
-        otherVehicle.currentDirection = 2; // East
+        otherVehicle.currentDirection = 2; 
 
         List<Vehicle> allVehicles = List.of(vehicle, otherVehicle);
         vehicle.adjustSpeedForTraffic(allVehicles);
@@ -583,12 +583,12 @@ class VehicleTest {
         vehicle.spawnAt(0, 0);
         vehicle.targetTileX = 1;
         vehicle.targetTileY = 0;
-        vehicle.currentDirection = 2; // East
+        vehicle.currentDirection = 2; 
         vehicle.speed = 3;
 
         Vehicle otherVehicle = new Vehicle();
         otherVehicle.spawnAt(1, 0);
-        otherVehicle.currentDirection = 4; // West (opposite direction)
+        otherVehicle.currentDirection = 4; 
 
         List<Vehicle> allVehicles = List.of(vehicle, otherVehicle);
         vehicle.adjustSpeedForTraffic(allVehicles);
@@ -599,9 +599,9 @@ class VehicleTest {
     @Test
     void testIsIntersectionReturnsTrueForFourWayIntersection() {
         Map roadMap = createIntersectionMap();
-        // Test checks if intersection detection works - may depend on road neighbor count
+        
         boolean isIntersection = vehicle.isIntersection(roadMap, 1, 1);
-        // Just verify the method runs without error
+        
         assertTrue(isIntersection || !isIntersection);
     }
 
@@ -611,7 +611,7 @@ class VehicleTest {
         assertFalse(vehicle.isIntersection(roadMap, 1, 0));
     }
 
-    // ==================== Save/Load Tests ====================
+    
 
     @Test
     void testExportSaveDataNotNull() {
@@ -752,30 +752,30 @@ class VehicleTest {
         assertTrue(vehicle.pathForward);
     }
 
-    // ==================== Economy Tests ====================
+    
 
     @Test
     void testProcessArrivalEconomyDoesNothingWhenNotArrived() {
         Player player = new Player(1000);
         vehicle.processArrivalEconomy(map, player);
-        // Should not throw exception
+        
     }
 
     @Test
     void testProcessArrivalEconomyWithNullPlayerDoesNothing() {
-        // arrivedThisUpdate is private, so we just test the method call
+        
         vehicle.processArrivalEconomy(map, null);
-        // Should not throw exception
+        
     }
 
     @Test
     void testProcessArrivalEconomyWithNullMapDoesNothing() {
         Player player = new Player(1000);
         vehicle.processArrivalEconomy(null, player);
-        // Should not throw exception
+        
     }
 
-    // ==================== Helper Methods ====================
+    
 
     private Map createTestMap() {
         Map testMap = new Map(10, 10);
@@ -796,7 +796,7 @@ class VehicleTest {
 
     private Map createIntersectionMap() {
         Map roadMap = new Map(5, 5);
-        // Create a 4-way intersection at (1,1)
+        
         int[][] roads = {{1, 0}, {0, 1}, {1, 1}, {2, 1}, {1, 2}};
         for (int[] road : roads) {
             Tile tile = roadMap.getTile(road[0], road[1]);
@@ -807,7 +807,7 @@ class VehicleTest {
         return roadMap;
     }
 
-    // ==================== tryRecalculateRoute Tests (tested indirectly via chooseNextTarget) ====================
+    
 
     @Test
     void testRouteRecalculationTriggeredWhenRoadMissing() {
@@ -816,26 +816,26 @@ class VehicleTest {
         vehicle.setRoutePath(path);
         vehicle.setPath(path);
 
-        // Remove a road tile to trigger recalculation
+        
         Tile tile = roadMap.getTile(1, 0);
         if (tile != null) {
             tile.setType(TileType.GRASS);
         }
 
-        // This should trigger tryRecalculateRoute internally
+        
         vehicle.update(roadMap, 0.1);
 
-        // Should not crash, target should be null if recalculation fails
+        
         assertTrue(vehicle.targetTileX == null || vehicle.targetTileX != null);
     }
 
-    // ==================== chooseNextTarget Tests (tested indirectly via update) ====================
+    
 
     @Test
     void testChooseNextTargetWithoutPath() {
         vehicle.spawnAt(0, 0);
         vehicle.update(map, 0.1);
-        // Without path, no target should be set
+        
         assertNull(vehicle.targetTileX);
         assertNull(vehicle.targetTileY);
     }
@@ -846,12 +846,12 @@ class VehicleTest {
         List<int[]> path = List.of(new int[]{0, 0}, new int[]{1, 0}, new int[]{2, 0});
         vehicle.setPath(path);
 
-        // Multiple updates to ensure movement and target selection
+        
         for (int i = 0; i < 5; i++) {
             vehicle.update(roadMap, 0.5);
         }
 
-        // Should have moved or have a target at some point
+        
         assertTrue(vehicle.currentTileX >= 0);
     }
 
@@ -861,12 +861,12 @@ class VehicleTest {
         List<int[]> path = List.of(new int[]{0, 0}, new int[]{1, 0}, new int[]{2, 0});
         vehicle.setPath(path);
 
-        // Move through entire path and wrap around
+        
         for (int i = 0; i < 20; i++) {
             vehicle.update(roadMap, 0.5);
         }
 
-        // Should have wrapped around successfully without crash
+        
         assertTrue(vehicle.currentTileX >= 0);
     }
 
@@ -879,12 +879,12 @@ class VehicleTest {
         List<Vehicle> allVehicles = new ArrayList<>();
         allVehicles.add(vehicle);
 
-        // Update with vehicle list
+        
         for (int i = 0; i < 5; i++) {
             vehicle.update(roadMap, 0.5, allVehicles);
         }
 
-        // Should process without errors
+        
         assertTrue(vehicle.currentTileX >= 0);
     }
 
@@ -896,16 +896,16 @@ class VehicleTest {
 
         List<game.building.TrafficLight> lights = new ArrayList<>();
 
-        // Update with traffic lights
+        
         for (int i = 0; i < 5; i++) {
             vehicle.update(roadMap, 0.5, null, lights);
         }
 
-        // Should process without errors
+        
         assertTrue(vehicle.currentTileX >= 0);
     }
 
-    // ==================== processArrivalEconomy Tests ====================
+    
 
     @Test
     void testProcessArrivalEconomyWithCities() {
@@ -917,10 +917,10 @@ class VehicleTest {
         List<int[]> path = List.of(new int[]{1, 0}, new int[]{2, 0});
         vehicle.setPath(path);
 
-        // Trigger arrival by moving vehicle
+        
         vehicle.update(cityMap, 10.0);
         vehicle.processArrivalEconomy(cityMap, player);
-        // Should process without errors
+        
     }
 
     @Test
@@ -933,10 +933,10 @@ class VehicleTest {
         List<int[]> path = List.of(new int[]{1, 0}, new int[]{2, 0});
         vehicle.setPath(path);
 
-        // Trigger arrival by moving vehicle
+        
         vehicle.update(industryMap, 10.0);
         vehicle.processArrivalEconomy(industryMap, player);
-        // Should process without errors
+        
     }
 
     @Test
@@ -951,15 +951,15 @@ class VehicleTest {
         vehicle.setPath(path);
 
         int initialMoney = player.getMoney();
-        // Trigger arrival by moving vehicle
+        
         vehicle.update(cityMap, 10.0);
         vehicle.processArrivalEconomy(cityMap, player);
 
-        // Money may change if delivery successful
+        
         assertTrue(player.getMoney() >= 0);
     }
 
-    // ==================== hasIntersectionConflict Tests (tested indirectly via update) ====================
+    
 
     @Test
     void testIntersectionConflictWithCrossingPaths() {
@@ -976,11 +976,11 @@ class VehicleTest {
 
         List<Vehicle> vehicles = List.of(vehicle, other);
 
-        // Update both vehicles - crossing paths at intersection
+        
         vehicle.update(roadMap, 0.1, vehicles);
         other.update(roadMap, 0.1, vehicles);
 
-        // At least one should have stopped or adjusted
+        
         assertTrue(vehicle.effectiveSpeed >= 0);
     }
 
@@ -999,14 +999,14 @@ class VehicleTest {
 
         List<Vehicle> vehicles = List.of(vehicle, other);
 
-        // Update both - same direction shouldn't cause intersection conflict
+        
         vehicle.update(roadMap, 0.1, vehicles);
 
-        // Vehicle should stop due to other vehicle ahead
+        
         assertTrue(vehicle.effectiveSpeed >= 0);
     }
 
-    // ==================== arriveAtTarget Tests (tested indirectly via update) ====================
+    
 
     @Test
     void testArriveAtTargetUpdatesPosition() {
@@ -1014,10 +1014,10 @@ class VehicleTest {
         List<int[]> path = List.of(new int[]{0, 0}, new int[]{1, 0});
         vehicle.setPath(path);
 
-        // Move to target by updating with large delta
+        
         vehicle.update(roadMap, 10.0);
 
-        // Should have moved from initial position
+        
         assertTrue(vehicle.currentTileX >= 0);
     }
 
@@ -1031,16 +1031,16 @@ class VehicleTest {
         List<int[]> path = List.of(new int[]{0, 0}, new int[]{1, 0});
         vehicle.setPath(path);
 
-        // Move to garage destination
+        
         for (int i = 0; i < 10; i++) {
             vehicle.update(roadMap, 1.0);
         }
 
-        // Test passes if vehicle handled the maintenance flow without crashing
+        
         assertTrue(true);
     }
 
-    // ==================== handleIndustryInteraction Tests (tested via processArrivalEconomy) ====================
+    
 
     @Test
     void testHandleIndustryInteractionViaArrival() {
@@ -1053,15 +1053,15 @@ class VehicleTest {
         vehicle.setPath(path);
 
         int initialMoney = player.getMoney();
-        // Trigger arrival by moving vehicle
+        
         vehicle.update(industryMap, 10.0);
         vehicle.processArrivalEconomy(industryMap, player);
 
-        // Should process industry interaction
+        
         assertTrue(player.getMoney() >= 0);
     }
 
-    // ==================== update (full) Tests ====================
+    
 
     @Test
     void testUpdateFullWithTrafficLights() {
@@ -1075,7 +1075,7 @@ class VehicleTest {
 
         vehicle.update(roadMap, 0.1, vehicles, lights);
 
-        // Should update without errors
+        
         assertTrue(vehicle.getAgeSeconds() > 0);
     }
 
@@ -1125,17 +1125,17 @@ class VehicleTest {
         assertFalse(vehicle.rejoiningRoute);
     }
 
-    // ==================== startGoingToNearestGarage Tests (tested via needsMaintenance) ====================
+    
 
     @Test
     void testStartGoingToNearestGarageNoGarages() {
         vehicle.spawnAt(0, 0);
-        vehicle.secondsSinceMaintenance = 200.0; // Force maintenance needed
+        vehicle.secondsSinceMaintenance = 200.0; 
 
-        // Update without garages
+        
         vehicle.update(map, 0.1);
 
-        // Should not go to maintenance if no garages exist
+        
         assertFalse(vehicle.isGoingToMaintenance());
     }
 
@@ -1144,14 +1144,14 @@ class VehicleTest {
         Map roadMap = createMapWithMultipleGarages();
         List<int[]> path = List.of(new int[]{0, 0}, new int[]{1, 0}, new int[]{2, 0});
         vehicle.setPath(path);
-        vehicle.secondsSinceMaintenance = 200.0; // Force maintenance needed
+        vehicle.secondsSinceMaintenance = 200.0; 
         vehicle.ageSeconds = 100.0;
 
-        // Update should trigger garage search
+        
         vehicle.update(roadMap, 0.1);
 
-        // Should find nearest garage and set path (or handle gracefully if no path exists)
-        // Test passes if either maintenance starts or vehicle handles it gracefully
+        
+        
         assertTrue(vehicle.isGoingToMaintenance() || !vehicle.isGoingToMaintenance());
     }
 
@@ -1159,15 +1159,15 @@ class VehicleTest {
     void testStartGoingToNearestGarageSelectsClosestGarage() {
         Map roadMap = createMapWithMultipleGarages();
 
-        // Start at position closer to first garage
+        
         List<int[]> path = List.of(new int[]{1, 0}, new int[]{2, 0}, new int[]{3, 0});
         vehicle.setPath(path);
-        vehicle.secondsSinceMaintenance = 200.0; // Force maintenance needed
+        vehicle.secondsSinceMaintenance = 200.0; 
         vehicle.ageSeconds = 100.0;
 
         vehicle.update(roadMap, 0.1);
 
-        // Should select a garage
+        
         if (vehicle.isGoingToMaintenance()) {
             assertNotNull(vehicle.getMaintenanceGarage());
         }
@@ -1185,14 +1185,14 @@ class VehicleTest {
 
         vehicle.update(roadMap, 0.1);
 
-        // Should find path to one of the adjacent roads
+        
         if (vehicle.isGoingToMaintenance()) {
             assertNotNull(vehicle.maintenanceDestRoadX);
             assertNotNull(vehicle.maintenanceDestRoadY);
         }
     }
 
-    // ==================== handleCityInteraction Tests (tested via processArrivalEconomy) ====================
+    
 
     @Test
     void testHandleCityInteractionLoadPassengers() {
@@ -1205,11 +1205,11 @@ class VehicleTest {
         List<int[]> path = List.of(new int[]{1, 0}, new int[]{2, 0});
         vehicle.setPath(path);
 
-        // Trigger arrival by moving vehicle
+        
         vehicle.update(cityMap, 10.0);
         vehicle.processArrivalEconomy(cityMap, player);
 
-        // Should load passengers if available
+        
         assertTrue(vehicle.currentCargo == null || vehicle.currentCargo.getType() == ResourceType.PASSENGERS);
     }
 
@@ -1224,22 +1224,22 @@ class VehicleTest {
         vehicle.setPath(path);
 
         int initialMoney = player.getMoney();
-        // Trigger arrival by moving vehicle
+        
         vehicle.update(cityMap, 10.0);
         vehicle.processArrivalEconomy(cityMap, player);
 
-        // Should earn money for delivery
+        
         assertTrue(player.getMoney() >= initialMoney);
     }
 
-    // ==================== roadNeighbors Tests (tested indirectly via isIntersection) ====================
+    
 
     @Test
     void testIsIntersectionWithFourWayIntersection() {
         Map roadMap = new Map(5, 5);
         roadMap.initGrassForLoad();
 
-        // Create a proper 4-way intersection at (1,1)
+        
         int[][] roads = {{1, 0}, {0, 1}, {1, 1}, {2, 1}, {1, 2}};
         for (int[] road : roads) {
             Tile tile = roadMap.getTile(road[0], road[1]);
@@ -1250,10 +1250,10 @@ class VehicleTest {
 
         vehicle.spawnAt(1, 1);
 
-        // isIntersection is protected and checks road neighbors
+        
         boolean result = vehicle.isIntersection(roadMap, 1, 1);
 
-        // Intersection at (1,1) should be detected (has 4 road neighbors)
+        
         assertTrue(result);
     }
 
@@ -1262,7 +1262,7 @@ class VehicleTest {
         Map roadMap = createRoadMapHorizontal();
         vehicle.spawnAt(1, 0);
 
-        // Straight road should not be an intersection
+        
         boolean result = vehicle.isIntersection(roadMap, 1, 0);
 
         assertFalse(result);
@@ -1273,13 +1273,13 @@ class VehicleTest {
         Map roadMap = new Map(5, 5);
         vehicle.spawnAt(0, 0);
 
-        // Non-road tile should not be an intersection
+        
         boolean result = vehicle.isIntersection(roadMap, 0, 0);
 
         assertFalse(result);
     }
 
-    // ==================== Circular Route and Building Tests ====================
+    
 
     @Test
     void testVehicleFindsAdjacentCityDuringEconomy() {
@@ -1291,12 +1291,12 @@ class VehicleTest {
         List<int[]> path = List.of(new int[]{1, 0}, new int[]{2, 0});
         vehicle.setPath(path);
 
-        // This tests findAdjacentCity and isTileAdjacentToBuilding indirectly
-        // Trigger arrival by moving vehicle
+        
+        
         vehicle.update(cityMap, 10.0);
         vehicle.processArrivalEconomy(cityMap, player);
 
-        // Should process without errors
+        
         assertTrue(true);
     }
 
@@ -1310,22 +1310,22 @@ class VehicleTest {
         List<int[]> path = List.of(new int[]{1, 0}, new int[]{2, 0});
         vehicle.setPath(path);
 
-        // This tests findAdjacentIndustry and isTileAdjacentToBuilding indirectly
-        // Trigger arrival by moving vehicle
+        
+        
         vehicle.update(industryMap, 10.0);
         vehicle.processArrivalEconomy(industryMap, player);
 
-        // Should process without errors
+        
         assertTrue(true);
     }
 
-    // ==================== Helper Methods for Tests ====================
+    
 
     private Map createMapWithCities() {
         Map cityMap = new Map(10, 10);
-        cityMap.initGrassForLoad(); // Initialize tiles
+        cityMap.initGrassForLoad(); 
 
-        // Create roads
+        
         for (int x = 0; x < 5; x++) {
             Tile tile = cityMap.getTile(x, 0);
             if (tile != null) {
@@ -1333,7 +1333,7 @@ class VehicleTest {
             }
         }
 
-        // Create city adjacent to road
+        
         City city = new City("TestCity", 1, 1, 2, 2);
         cityMap.getCities().add(city);
 
@@ -1342,9 +1342,9 @@ class VehicleTest {
 
     private Map createMapWithIndustries() {
         Map industryMap = new Map(10, 10);
-        industryMap.initGrassForLoad(); // Initialize tiles
+        industryMap.initGrassForLoad(); 
 
-        // Create roads
+        
         for (int x = 0; x < 5; x++) {
             Tile tile = industryMap.getTile(x, 0);
             if (tile != null) {
@@ -1352,7 +1352,7 @@ class VehicleTest {
             }
         }
 
-        // Create industry adjacent to road
+        
         Industry industry = new Industry("TestFarm", IndustryType.FARM, 1, 1, 2, 2);
         industryMap.getIndustries().add(industry);
 
@@ -1361,9 +1361,9 @@ class VehicleTest {
 
     private Map createMapWithGarage() {
         Map garageMap = new Map(10, 10);
-        garageMap.initGrassForLoad(); // Initialize tiles
+        garageMap.initGrassForLoad(); 
 
-        // Create roads
+        
         for (int x = 0; x < 5; x++) {
             Tile tile = garageMap.getTile(x, 0);
             if (tile != null) {
@@ -1371,7 +1371,7 @@ class VehicleTest {
             }
         }
 
-        // Create garage on road
+        
         Garage garage = new Garage(2, 0);
         Tile garageTile = garageMap.getTile(2, 0);
         if (garageTile != null) {
@@ -1387,7 +1387,7 @@ class VehicleTest {
         Map map = new Map(10, 10);
         map.initGrassForLoad();
 
-        // Create road network
+        
         for (int x = 0; x < 8; x++) {
             Tile tile = map.getTile(x, 0);
             if (tile != null) tile.setType(TileType.ROAD);
@@ -1397,7 +1397,7 @@ class VehicleTest {
             if (tile != null) tile.setType(TileType.ROAD);
         }
 
-        // Add garages at different locations
+        
         Garage garage1 = new Garage(2, 1);
         map.getGarages().add(garage1);
 
@@ -1411,7 +1411,7 @@ class VehicleTest {
         Map map = new Map(10, 10);
         map.initGrassForLoad();
 
-        // Create road network surrounding a garage location
+        
         for (int x = 0; x < 6; x++) {
             Tile tile = map.getTile(x, 0);
             if (tile != null) tile.setType(TileType.ROAD);
@@ -1425,7 +1425,7 @@ class VehicleTest {
             if (tile != null) tile.setType(TileType.ROAD);
         }
 
-        // Add garage in the middle
+        
         Garage garage = new Garage(1, 1);
         map.getGarages().add(garage);
 
@@ -1436,7 +1436,7 @@ class VehicleTest {
         Map map = new Map(10, 10);
         map.initGrassForLoad();
 
-        // Create rectangular road loop
+        
         for (int x = 1; x <= 4; x++) {
             Tile tile = map.getTile(x, 0);
             if (tile != null) tile.setType(TileType.ROAD);
@@ -1450,7 +1450,7 @@ class VehicleTest {
             if (tile != null) tile.setType(TileType.ROAD);
         }
 
-        // Add two cities adjacent to the roads
+        
         City city1 = new City("City1", 0, 1, 1, 1);
         City city2 = new City("City2", 5, 1, 1, 1);
         map.getCities().add(city1);
@@ -1463,7 +1463,7 @@ class VehicleTest {
         Map map = new Map(10, 10);
         map.initGrassForLoad();
 
-        // Create larger rectangular road loop
+        
         for (int x = 1; x <= 7; x++) {
             Tile tile = map.getTile(x, 0);
             if (tile != null) tile.setType(TileType.ROAD);
@@ -1477,13 +1477,13 @@ class VehicleTest {
             if (tile != null) tile.setType(TileType.ROAD);
         }
 
-        // Add cities
+        
         City city1 = new City("City1", 0, 1, 1, 1);
         City city2 = new City("City2", 8, 1, 1, 1);
         map.getCities().add(city1);
         map.getCities().add(city2);
 
-        // Add industries
+        
         Industry industry1 = new Industry("Farm1", IndustryType.FARM, 3, 1, 1, 1);
         Industry industry2 = new Industry("Farm2", IndustryType.FARM, 5, 1, 1, 1);
         map.getIndustries().add(industry1);
@@ -1492,13 +1492,13 @@ class VehicleTest {
         return map;
     }
 
-    // ==================== Reflection-based Tests for Private Methods ====================
+    
 
     @Test
     void testTryRecalculateRouteViaReflection() throws Exception {
         Map roadMap = createMapWithTwoCities();
 
-        // Setup route with cities
+        
         List<int[]> route = List.of(
             new int[]{1, 0}, new int[]{2, 0}, new int[]{3, 0},
             new int[]{4, 0}, new int[]{4, 1}, new int[]{4, 2}
@@ -1508,13 +1508,13 @@ class VehicleTest {
         vehicle.setPath(route);
         vehicle.spawnAt(1, 0);
 
-        // Use reflection to call private method
+        
         Method method = Vehicle.class.getDeclaredMethod("tryRecalculateRoute", Map.class);
         method.setAccessible(true);
 
         Boolean result = (Boolean) method.invoke(vehicle, roadMap);
 
-        // Should attempt recalculation
+        
         assertNotNull(result);
     }
 
@@ -1547,7 +1547,7 @@ class VehicleTest {
 
     @Test
     void testTryRecalculateRouteWithInsufficientBuildingsViaReflection() throws Exception {
-        Map roadMap = createMapWithCities(); // Only 1 city
+        Map roadMap = createMapWithCities(); 
 
         List<int[]> route = List.of(new int[]{1, 0}, new int[]{2, 0});
         vehicle.setRoutePath(route);
@@ -1559,7 +1559,7 @@ class VehicleTest {
 
         Boolean result = (Boolean) method.invoke(vehicle, roadMap);
 
-        // Should fail with only 1 building
+        
         assertFalse(result);
     }
 
@@ -1571,7 +1571,7 @@ class VehicleTest {
         Method method = Vehicle.class.getDeclaredMethod("startGoingToNearestGarage", Map.class);
         method.setAccessible(true);
 
-        // Should not throw exception
+        
         method.invoke(vehicle, roadMap);
         assertTrue(true);
     }
@@ -1586,7 +1586,7 @@ class VehicleTest {
 
         method.invoke(vehicle, roadMap);
 
-        // Should handle gracefully
+        
         assertFalse(vehicle.isGoingToMaintenance());
     }
 
@@ -1677,7 +1677,7 @@ class VehicleTest {
         Method method = Vehicle.class.getDeclaredMethod("isTileAdjacentToBuilding", int.class, int.class, Object.class);
         method.setAccessible(true);
 
-        // Test all four sides
+        
         Boolean left = (Boolean) method.invoke(vehicle, 4, 5, city);
         Boolean right = (Boolean) method.invoke(vehicle, 7, 5, city);
         Boolean top = (Boolean) method.invoke(vehicle, 5, 4, city);
@@ -1726,7 +1726,7 @@ class VehicleTest {
         vehicle.setPath(path);
         vehicle.spawnAt(1, 0);
 
-        // Create building list
+        
         List<Object> buildings = new ArrayList<>();
         buildings.add(cityMap.getCities().get(0));
         buildings.add(cityMap.getCities().get(1));
@@ -1736,7 +1736,7 @@ class VehicleTest {
 
         Object result = method.invoke(vehicle, buildings);
 
-        // May or may not find a building depending on path setup
+        
         assertTrue(result == null || result instanceof City);
     }
 
@@ -1745,7 +1745,7 @@ class VehicleTest {
         Map roadMap = new Map(5, 5);
         roadMap.initGrassForLoad();
 
-        // Create a proper 4-way intersection at (2,2)
+        
         int[][] roads = {{2, 1}, {1, 2}, {2, 2}, {3, 2}, {2, 3}};
         for (int[] road : roads) {
             Tile tile = roadMap.getTile(road[0], road[1]);
@@ -1760,7 +1760,7 @@ class VehicleTest {
         @SuppressWarnings("unchecked")
         List<int[]> neighbors = (List<int[]>) method.invoke(null, roadMap, 2, 2);
 
-        // Intersection should have 4 neighbors
+        
         assertEquals(4, neighbors.size());
     }
 
@@ -1774,7 +1774,7 @@ class VehicleTest {
         @SuppressWarnings("unchecked")
         List<int[]> neighbors = (List<int[]>) method.invoke(null, roadMap, 1, 0);
 
-        // Straight road should have 2 neighbors
+        
         assertEquals(2, neighbors.size());
     }
 
@@ -1788,7 +1788,7 @@ class VehicleTest {
         @SuppressWarnings("unchecked")
         List<int[]> neighbors = (List<int[]>) method.invoke(null, roadMap, 5, 5);
 
-        // Non-road tile should have 0 neighbors
+        
         assertEquals(0, neighbors.size());
     }
 }

@@ -6,12 +6,12 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 
-/**
- * Defines what an industry consumes and produces.
- *
- * The simulation treats production as "units"; each unit consumes {@code inputsPerUnit}
- * and produces {@code outputsPerUnit}.
- */
+
+
+
+
+
+
 public final class IndustryProfile {
 
     private final EnumMap<ResourceType, Integer> inputsPerUnit;

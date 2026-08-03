@@ -5,18 +5,18 @@ import java.util.LinkedHashMap;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Minimal JSON parser/writer with no external dependencies.
- *
- * Supported types:
- * - Object: Map<String, Object>
- * - Array: List<Object>
- * - String, Double, Boolean, null
- *
- * Notes:
- * - Numbers are parsed as Double.
- * - Writer emits JSON with stable key order if using LinkedHashMap.
- */
+
+
+
+
+
+
+
+
+
+
+
+
 public final class Json {
 
     private Json() {}
@@ -64,7 +64,7 @@ public final class Json {
             if (d.isNaN() || d.isInfinite()) {
                 sb.append("null");
             } else {
-                // Keep it compact, but avoid scientific notation for simple integers.
+                
                 if (Math.rint(d) == d) sb.append((long) d.doubleValue());
                 else sb.append(d);
             }

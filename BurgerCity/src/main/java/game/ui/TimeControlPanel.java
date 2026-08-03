@@ -37,7 +37,7 @@ public class TimeControlPanel extends JPanel {
                 new EmptyBorder(6, 10, 6, 10)
         ));
 
-        // LEFT: Time display
+        
         timeDisplay = new JLabel(getTimeDisplayText());
         timeDisplay.setFont(new Font("SansSerif", Font.BOLD, 14));
         timeDisplay.setForeground(TIME_COLOR);
@@ -47,7 +47,7 @@ public class TimeControlPanel extends JPanel {
 
         add(timeDisplay, BorderLayout.WEST);
 
-        // RIGHT: Speed buttons panel
+        
         JPanel buttonPanel = new JPanel(new FlowLayout(FlowLayout.RIGHT, 4, 0));
         buttonPanel.setOpaque(false);
 
@@ -78,13 +78,13 @@ public class TimeControlPanel extends JPanel {
         button.setPreferredSize(new Dimension(60, 30));
         button.setToolTipText(speed.getDisplayName());
 
-        // Click action
+        
         button.addActionListener(e -> {
             timeManager.setSpeed(speed);
             updateButtonStates();
         });
 
-        // Hover effect
+        
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -102,10 +102,10 @@ public class TimeControlPanel extends JPanel {
         return button;
     }
 
-    /**
-     * Updates the time display and button states.
-     * Call this periodically from the game loop.
-     */
+    
+
+
+
     public void refresh() {
         timeDisplay.setText(getTimeDisplayText());
         updateButtonStates();

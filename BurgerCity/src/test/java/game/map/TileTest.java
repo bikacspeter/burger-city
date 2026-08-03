@@ -16,7 +16,7 @@ class TileTest {
         tile = new Tile(5, 10, TileType.GRASS);
     }
 
-    // ==================== Constructor Tests ====================
+    
 
     @Test
     void testConstructorSetsCoordinates() {
@@ -76,7 +76,7 @@ class TileTest {
         assertEquals(20000, largeTile.getY());
     }
 
-    // ==================== Type Tests ====================
+    
 
     @Test
     void testSetTypeChangesType() {
@@ -114,7 +114,7 @@ class TileTest {
         }
     }
 
-    // ==================== Walkable Tests ====================
+    
 
     @Test
     void testSetWalkableTrue() {
@@ -137,7 +137,7 @@ class TileTest {
         assertFalse(tile.isWalkable());
     }
 
-    // ==================== Occupied Tests ====================
+    
 
     @Test
     void testSetOccupiedTrue() {
@@ -160,7 +160,7 @@ class TileTest {
         assertFalse(tile.isOccupied());
     }
 
-    // ==================== Building Tests ====================
+    
 
     @Test
     void testSetPlacedBuilding() {
@@ -189,7 +189,7 @@ class TileTest {
         assertEquals(building2, tile.getPlacedBuilding());
     }
 
-    // ==================== Forest Trees Tests ====================
+    
 
     @Test
     void testSetForestTreesValidValue() {
@@ -245,7 +245,7 @@ class TileTest {
         tile.setType(TileType.ROAD);
         tile.setForestTrees(3);
 
-        // Should become forest when trees > 0
+        
         assertEquals(TileType.FOREST, tile.getType());
     }
 
@@ -267,28 +267,28 @@ class TileTest {
         }
     }
 
-    // ==================== Integration Tests ====================
+    
 
     @Test
     void testTileLifecycle() {
-        // Start as grass
+        
         Tile lifeTile = new Tile(0, 0, TileType.GRASS);
         assertTrue(lifeTile.isWalkable());
 
-        // Grow forest
+        
         lifeTile.setForestTrees(3);
         assertEquals(TileType.FOREST, lifeTile.getType());
         assertEquals(3, lifeTile.getForestTrees());
 
-        // Clear forest
+        
         lifeTile.setForestTrees(0);
         assertEquals(TileType.GRASS, lifeTile.getType());
 
-        // Build road
+        
         lifeTile.setType(TileType.ROAD);
         assertEquals(TileType.ROAD, lifeTile.getType());
 
-        // Place building
+        
         Building building = new Garage(0, 0);
         lifeTile.setPlacedBuilding(building);
         lifeTile.setOccupied(true);
@@ -304,7 +304,7 @@ class TileTest {
         tile1.setOccupied(true);
         tile1.setForestTrees(3);
 
-        // tile2 should be independent
+        
         assertFalse(tile2.isOccupied());
         assertEquals(0, tile2.getForestTrees());
         assertEquals(TileType.ROAD, tile2.getType());
@@ -315,13 +315,13 @@ class TileTest {
         Tile tile1 = new Tile(5, 10, TileType.GRASS);
         Tile tile2 = new Tile(5, 10, TileType.GRASS);
 
-        // Same coordinates but different objects
+        
         assertNotSame(tile1, tile2);
         assertEquals(tile1.getX(), tile2.getX());
         assertEquals(tile1.getY(), tile2.getY());
     }
 
-    // ==================== Edge Cases ====================
+    
 
     @Test
     void testSetForestTreesBoundaryValues() {
@@ -367,7 +367,7 @@ class TileTest {
     void testWalkablePersistsThroughManualSet() {
         tile.setWalkable(true);
         tile.setType(TileType.FOREST);
-        // setWalkable was manually set to true, should persist
+        
         assertTrue(tile.isWalkable());
     }
 }

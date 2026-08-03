@@ -3,11 +3,11 @@ package game.resource;
 import java.util.EnumMap;
 import java.util.Map;
 
-/**
- * Simple storage for resources by type.
- *
- * Note: This is intentionally minimal and side-effecting to fit the current codebase.
- */
+
+
+
+
+
 public class ResourceInventory {
 
     private final EnumMap<ResourceType, Integer> amounts = new EnumMap<>(ResourceType.class);
@@ -25,10 +25,10 @@ public class ResourceInventory {
         amounts.put(type, get(type) + amount);
     }
 
-    /**
-     * Removes up to {@code amount} from inventory.
-     * @return how much was actually removed
-     */
+    
+
+
+
     public int removeUpTo(ResourceType type, int amount) {
         if (amount <= 0) return 0;
         int have = get(type);

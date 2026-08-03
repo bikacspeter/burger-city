@@ -15,7 +15,7 @@ class RoadMapTest {
         map.initGrassForLoad();
     }
 
-    // Basic Road Building Tests
+    
 
     @Test
     void testBuildRoadOnGrass() {
@@ -39,14 +39,14 @@ class RoadMapTest {
 
     @Test
     void testBuildRoadNetwork() {
-        // Build a cross pattern
+        
         assertTrue(map.buildRoad(10, 10));
         assertTrue(map.buildRoad(9, 10));
         assertTrue(map.buildRoad(11, 10));
         assertTrue(map.buildRoad(10, 9));
         assertTrue(map.buildRoad(10, 11));
 
-        // All should be roads
+        
         assertEquals(TileType.ROAD, map.getTile(10, 10).getType());
         assertEquals(TileType.ROAD, map.getTile(9, 10).getType());
         assertEquals(TileType.ROAD, map.getTile(11, 10).getType());
@@ -54,19 +54,19 @@ class RoadMapTest {
         assertEquals(TileType.ROAD, map.getTile(10, 11).getType());
     }
 
-    // Tests for building on CITY tiles
+    
 
     @Test
     void testCannotBuildRoadOnCity() {
         City city = new City("Test City", 5, 5, 3, 3);
         map.addCityForLoad(city);
 
-        // Try to build road on city tiles
+        
         assertFalse(map.buildRoad(5, 5));
         assertFalse(map.buildRoad(6, 6));
         assertFalse(map.buildRoad(7, 7));
 
-        // Verify tiles are still city
+        
         assertEquals(TileType.CITY, map.getTile(5, 5).getType());
         assertEquals(TileType.CITY, map.getTile(6, 6).getType());
         assertEquals(TileType.CITY, map.getTile(7, 7).getType());
@@ -77,11 +77,11 @@ class RoadMapTest {
         City city = new City("Test City", 10, 10, 4, 4);
         map.addCityForLoad(city);
 
-        // Build roads around the city (not on it)
-        assertTrue(map.buildRoad(9, 10));  // Left
-        assertTrue(map.buildRoad(14, 10)); // Right
-        assertTrue(map.buildRoad(10, 9));  // Top
-        assertTrue(map.buildRoad(10, 14)); // Bottom
+        
+        assertTrue(map.buildRoad(9, 10));  
+        assertTrue(map.buildRoad(14, 10)); 
+        assertTrue(map.buildRoad(10, 9));  
+        assertTrue(map.buildRoad(10, 14)); 
 
         assertEquals(TileType.ROAD, map.getTile(9, 10).getType());
         assertEquals(TileType.ROAD, map.getTile(14, 10).getType());
@@ -89,19 +89,19 @@ class RoadMapTest {
         assertEquals(TileType.ROAD, map.getTile(10, 14).getType());
     }
 
-    // Tests for building on INDUSTRY tiles
+    
 
     @Test
     void testCannotBuildRoadOnIndustry() {
         assertTrue(map.buildIndustry(15, 15, IndustryType.FARM));
 
-        // Try to build road on industry tiles (2x2 area)
+        
         assertFalse(map.buildRoad(15, 15));
         assertFalse(map.buildRoad(16, 15));
         assertFalse(map.buildRoad(15, 16));
         assertFalse(map.buildRoad(16, 16));
 
-        // Verify tiles are still industry
+        
         assertEquals(TileType.INDUSTRY, map.getTile(15, 15).getType());
         assertEquals(TileType.INDUSTRY, map.getTile(16, 16).getType());
     }
@@ -110,11 +110,11 @@ class RoadMapTest {
     void testCanBuildRoadAroundIndustry() {
         assertTrue(map.buildIndustry(20, 20, IndustryType.BAKERY));
 
-        // Build roads around the industry
-        assertTrue(map.buildRoad(19, 20)); // Left
-        assertTrue(map.buildRoad(22, 20)); // Right
-        assertTrue(map.buildRoad(20, 19)); // Top
-        assertTrue(map.buildRoad(20, 22)); // Bottom
+        
+        assertTrue(map.buildRoad(19, 20)); 
+        assertTrue(map.buildRoad(22, 20)); 
+        assertTrue(map.buildRoad(20, 19)); 
+        assertTrue(map.buildRoad(20, 22)); 
 
         assertEquals(TileType.ROAD, map.getTile(19, 20).getType());
         assertEquals(TileType.ROAD, map.getTile(22, 20).getType());
@@ -122,32 +122,32 @@ class RoadMapTest {
         assertEquals(TileType.ROAD, map.getTile(20, 22).getType());
     }
 
-    // Tests for building on FOREST tiles
+    
 
     @Test
     void testCanBuildRoadOnForest() {
-        // Create a forest tile
+        
         Tile tile = map.getTile(25, 25);
         tile.setType(TileType.FOREST);
         tile.setForestTrees(3);
 
         assertTrue(map.buildRoad(25, 25));
 
-        // Verify it's now a road and trees are cleared
+        
         assertEquals(TileType.ROAD, map.getTile(25, 25).getType());
         assertEquals(0, map.getTile(25, 25).getForestTrees());
     }
 
     @Test
     void testBuildRoadClearsForest() {
-        // Create multiple forest tiles
+        
         for (int i = 0; i < 5; i++) {
             Tile tile = map.getTile(30 + i, 10);
             tile.setType(TileType.FOREST);
             tile.setForestTrees(2 + i);
         }
 
-        // Build road through forest
+        
         for (int i = 0; i < 5; i++) {
             assertTrue(map.buildRoad(30 + i, 10));
             assertEquals(TileType.ROAD, map.getTile(30 + i, 10).getType());
@@ -155,7 +155,7 @@ class RoadMapTest {
         }
     }
 
-    // Tests for Road Demolition
+    
 
     @Test
     void testDemolishRoad() {
@@ -172,12 +172,12 @@ class RoadMapTest {
 
     @Test
     void testDemolishMultipleRoads() {
-        // Build a road line
+        
         for (int i = 0; i < 5; i++) {
             assertTrue(map.buildRoad(15 + i, 20));
         }
 
-        // Demolish them
+        
         for (int i = 0; i < 5; i++) {
             assertTrue(map.demolishRoad(15 + i, 20));
             assertEquals(TileType.GRASS, map.getTile(15 + i, 20).getType());
@@ -186,23 +186,23 @@ class RoadMapTest {
 
     @Test
     void testCannotDemolishNonRoadTile() {
-        assertFalse(map.demolishRoad(5, 5)); // Grass tile
+        assertFalse(map.demolishRoad(5, 5)); 
 
         City city = new City("Test City", 10, 10, 3, 3);
         map.addCityForLoad(city);
-        assertFalse(map.demolishRoad(10, 10)); // City tile
+        assertFalse(map.demolishRoad(10, 10)); 
     }
 
     @Test
     void testRebuildRoadAfterDemolition() {
         assertTrue(map.buildRoad(8, 8));
         assertTrue(map.demolishRoad(8, 8));
-        assertTrue(map.buildRoad(8, 8)); // Should be able to rebuild
+        assertTrue(map.buildRoad(8, 8)); 
 
         assertEquals(TileType.ROAD, map.getTile(8, 8).getType());
     }
 
-    // Boundary Tests
+    
 
     @Test
     void testCannotBuildRoadOutOfBounds() {
@@ -225,7 +225,7 @@ class RoadMapTest {
         assertEquals(TileType.ROAD, map.getTile(49, 39).getType());
     }
 
-    // Tests for building on already occupied tiles
+    
 
     @Test
     void testCannotBuildRoadOnOccupiedTile() {
@@ -240,21 +240,21 @@ class RoadMapTest {
         Road road = new Road(15, 15);
         map.buildBuilding(15, 15, road);
 
-        // Tile now has a building
+        
         assertFalse(map.buildRoad(15, 15));
     }
 
     @Test
     void testCannotBuildRoadTwiceOnSameTile() {
         assertTrue(map.buildRoad(25, 30));
-        assertFalse(map.buildRoad(25, 30)); // Already a road
+        assertFalse(map.buildRoad(25, 30)); 
     }
 
-    // Test road connectivity and pathfinding
+    
 
     @Test
     void testRoadPathfindingBetweenTwoRoads() {
-        // Build a simple path
+        
         for (int i = 0; i < 5; i++) {
             assertTrue(map.buildRoad(10 + i, 15));
         }
@@ -274,7 +274,7 @@ class RoadMapTest {
         assertTrue(path.isEmpty());
     }
 
-    // Edge Cases
+    
 
     @Test
     void testRoadStateAfterBuilding() {
@@ -301,14 +301,14 @@ class RoadMapTest {
 
     @Test
     void testComplexRoadNetworkWithCitiesAndIndustries() {
-        // Add a city
+        
         City city = new City("Center City", 15, 15, 4, 4);
         map.addCityForLoad(city);
 
-        // Add an industry
+        
         assertTrue(map.buildIndustry(25, 15, IndustryType.FARM));
 
-        // Build roads connecting them
+        
         for (int x = 14; x >= 10; x--) {
             assertTrue(map.buildRoad(x, 16), "Failed at x: " + x + ", y: 16");
         }
@@ -319,48 +319,48 @@ class RoadMapTest {
             assertTrue(map.buildRoad(10, y), "Failed at x: 10, y: " + y);
         }
 
-        // Verify roads exist
+        
         assertEquals(TileType.ROAD, map.getTile(10, 10).getType());
         assertEquals(TileType.ROAD, map.getTile(14, 16).getType());
         assertEquals(TileType.ROAD, map.getTile(24, 16).getType());
     }
 
-    // Additional coverage tests
+    
 
     @Test
     void testAdjacentRoadTilesForArea() {
-        // Create a city
+        
         City city = new City("Test City", 10, 10, 4, 4);
         map.addCityForLoad(city);
 
-        // Build roads around the city
-        map.buildRoad(9, 10);   // Left
-        map.buildRoad(14, 12);  // Right
-        map.buildRoad(11, 9);   // Top
-        map.buildRoad(12, 14);  // Bottom
+        
+        map.buildRoad(9, 10);   
+        map.buildRoad(14, 12);  
+        map.buildRoad(11, 9);   
+        map.buildRoad(12, 14);  
 
-        // Get adjacent road tiles
+        
         var adjacentRoads = map.adjacentRoadTilesForArea(10, 10, 4, 4);
 
-        // Should find all 4 roads
+        
         assertFalse(adjacentRoads.isEmpty());
         assertTrue(adjacentRoads.size() >= 4);
     }
 
     @Test
     void testFindRoadPathBetweenAreas() {
-        // Create two cities
+        
         City cityA = new City("City A", 5, 5, 3, 3);
         City cityB = new City("City B", 20, 5, 3, 3);
         map.addCityForLoad(cityA);
         map.addCityForLoad(cityB);
 
-        // Build connecting road
+        
         for (int x = 8; x <= 19; x++) {
             assertTrue(map.buildRoad(x, 6));
         }
 
-        // Find path between the two cities
+        
         var path = map.findRoadPathBetweenAreas(5, 5, 3, 3, 20, 5, 3, 3);
 
         assertNotNull(path);
@@ -369,13 +369,13 @@ class RoadMapTest {
 
     @Test
     void testNoPathBetweenDisconnectedAreas() {
-        // Create two cities without connecting roads
+        
         City cityA = new City("City A", 5, 5, 3, 3);
         City cityB = new City("City B", 40, 35, 3, 3);
         map.addCityForLoad(cityA);
         map.addCityForLoad(cityB);
 
-        // Try to find path (should fail - no roads)
+        
         var path = map.findRoadPathBetweenAreas(5, 5, 3, 3, 40, 35, 3, 3);
 
         assertTrue(path.isEmpty());
@@ -391,7 +391,7 @@ class RoadMapTest {
 
     @Test
     void testBuildRoadOnNullTile() {
-        // Out of bounds returns false
+        
         assertFalse(map.buildRoad(-5, -5));
         assertFalse(map.buildRoad(1000, 1000));
     }
@@ -412,7 +412,7 @@ class RoadMapTest {
     void testRoadPathFromNonRoadTile() {
         map.buildRoad(10, 10);
 
-        // Try to find path from grass tile to road
+        
         var path = map.findRoadPathBetweenRoadTiles(5, 5, 10, 10);
 
         assertTrue(path.isEmpty());
@@ -422,7 +422,7 @@ class RoadMapTest {
     void testRoadPathToNonRoadTile() {
         map.buildRoad(10, 10);
 
-        // Try to find path from road to grass tile
+        
         var path = map.findRoadPathBetweenRoadTiles(10, 10, 5, 5);
 
         assertTrue(path.isEmpty());
@@ -430,7 +430,7 @@ class RoadMapTest {
 
     @Test
     void testLongRoadPath() {
-        // Build a long winding path
+        
         for (int x = 5; x <= 20; x++) {
             assertTrue(map.buildRoad(x, 10));
         }
@@ -462,13 +462,13 @@ class RoadMapTest {
 
     @Test
     void testCannotBuildIndustryOnForest() {
-        // Create forest tiles
+        
         Tile tile1 = map.getTile(10, 10);
         Tile tile2 = map.getTile(11, 10);
         tile1.setType(TileType.FOREST);
         tile2.setType(TileType.FOREST);
 
-        // Try to build industry on forest (should fail)
+        
         assertFalse(map.buildIndustry(10, 10, IndustryType.FARM));
     }
 
@@ -481,7 +481,7 @@ class RoadMapTest {
     void testCannotBuildIndustryOutOfBounds() {
         assertFalse(map.buildIndustry(-1, 0, IndustryType.FARM));
         assertFalse(map.buildIndustry(0, -1, IndustryType.FARM));
-        assertFalse(map.buildIndustry(49, 39, IndustryType.FARM)); // 2x2 would go out of bounds
+        assertFalse(map.buildIndustry(49, 39, IndustryType.FARM)); 
         assertFalse(map.buildIndustry(100, 100, IndustryType.FARM));
     }
 
@@ -497,19 +497,19 @@ class RoadMapTest {
 
     @Test
     void testRoadNetworkWithMultiplePaths() {
-        // Create a grid of roads
+        
         for (int x = 10; x <= 15; x++) {
             for (int y = 10; y <= 15; y++) {
                 assertTrue(map.buildRoad(x, y));
             }
         }
 
-        // Find path - should find one of many possible paths
+        
         var path = map.findRoadPathBetweenRoadTiles(10, 10, 15, 15);
 
         assertNotNull(path);
         assertFalse(path.isEmpty());
-        // Path should start and end at correct positions
+        
         assertEquals(10, path.get(0)[0]);
         assertEquals(10, path.get(0)[1]);
         assertEquals(15, path.get(path.size() - 1)[0]);
@@ -518,19 +518,19 @@ class RoadMapTest {
 
     @Test
     void testDemolishRoadInMiddleOfPath() {
-        // Build a straight road
+        
         for (int x = 10; x <= 20; x++) {
             assertTrue(map.buildRoad(x, 15));
         }
 
-        // Verify path exists
+        
         var pathBefore = map.findRoadPathBetweenRoadTiles(10, 15, 20, 15);
         assertFalse(pathBefore.isEmpty());
 
-        // Demolish middle road
+        
         assertTrue(map.demolishRoad(15, 15));
 
-        // Verify path no longer exists
+        
         var pathAfter = map.findRoadPathBetweenRoadTiles(10, 15, 20, 15);
         assertTrue(pathAfter.isEmpty());
     }
@@ -560,7 +560,7 @@ class RoadMapTest {
 
     @Test
     void testRoadCornersAndTurns() {
-        // Build an L-shaped road
+        
         for (int x = 10; x <= 15; x++) {
             assertTrue(map.buildRoad(x, 10));
         }
@@ -568,10 +568,10 @@ class RoadMapTest {
             assertTrue(map.buildRoad(15, y));
         }
 
-        // Verify corner tile
+        
         assertEquals(TileType.ROAD, map.getTile(15, 10).getType());
 
-        // Find path along the L
+        
         var path = map.findRoadPathBetweenRoadTiles(10, 10, 15, 15);
         assertFalse(path.isEmpty());
     }

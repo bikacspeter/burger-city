@@ -268,7 +268,7 @@ class IndustryTest {
     void testUpdateProducesOutputForFarm() {
         Industry farm = new Industry("Farm", IndustryType.FARM, 0, 0, 3, 3);
 
-        // Update for enough time to produce at least one unit
+        
         farm.update(3.0);
 
         assertTrue(farm.getStorage().get(ResourceType.WHEAT) > 0);
@@ -279,7 +279,7 @@ class IndustryTest {
         Industry bakery = new Industry("Bakery", IndustryType.BAKERY, 0, 0, 3, 3);
         bakery.deliverToStorage(ResourceType.WHEAT, 100);
 
-        // Update for enough time to produce
+        
         bakery.update(5.0);
 
         assertTrue(bakery.getStorage().get(ResourceType.WHEAT) < 100);
@@ -300,13 +300,13 @@ class IndustryTest {
         Industry bakery = new Industry("Bakery", IndustryType.BAKERY, 0, 0, 3, 3);
         bakery.deliverToStorage(ResourceType.WHEAT, 10);
 
-        // Force production of exactly 1 unit
+        
         bakery.update(10.0);
 
         int wheatRemaining = bakery.getStorage().get(ResourceType.WHEAT);
         int breadProduced = bakery.getStorage().get(ResourceType.BREAD);
 
-        // Bakery consumes 2 wheat per 1 bread
+        
         assertTrue(breadProduced > 0);
         assertEquals(10 - (breadProduced * 2), wheatRemaining);
     }
@@ -316,10 +316,10 @@ class IndustryTest {
         Industry bakery = new Industry("Bakery", IndustryType.BAKERY, 0, 0, 3, 3);
         bakery.deliverToStorage(ResourceType.WHEAT, 3);
 
-        // Try to produce for a long time
+        
         bakery.update(100.0);
 
-        // Should only produce 1 bread (consuming 2 wheat), leaving 1 wheat
+        
         assertEquals(1, bakery.getStorage().get(ResourceType.BREAD));
         assertEquals(1, bakery.getStorage().get(ResourceType.WHEAT));
     }
@@ -345,7 +345,7 @@ class IndustryTest {
 
         burgerFactory.update(100.0);
 
-        // Should produce 2 hamburgers, consuming all bread
+        
         assertEquals(2, burgerFactory.getStorage().get(ResourceType.HAMBURGER));
         assertEquals(0, burgerFactory.getStorage().get(ResourceType.BREAD));
         assertEquals(8, burgerFactory.getStorage().get(ResourceType.MEAT_PATTY));
@@ -356,12 +356,12 @@ class IndustryTest {
         Industry farm = new Industry("Farm", IndustryType.FARM, 0, 0, 3, 3);
         double initialProductivity = farm.getProductivity();
 
-        // Update multiple times
+        
         for (int i = 0; i < 100; i++) {
             farm.update(0.1);
         }
 
-        // Productivity should have changed from initial value
+        
         assertNotEquals(initialProductivity, farm.getProductivity());
     }
 
@@ -369,7 +369,7 @@ class IndustryTest {
     void testProductivityStaysBetweenBounds() {
         Industry farm = new Industry("Farm", IndustryType.FARM, 0, 0, 3, 3);
 
-        // Update many times with various deltas
+        
         for (int i = 0; i < 1000; i++) {
             farm.update(0.1);
             double productivity = farm.getProductivity();
@@ -395,7 +395,7 @@ class IndustryTest {
     void testSmallDeltaTimesEventuallyProduceUnits() {
         Industry farm = new Industry("Farm", IndustryType.FARM, 0, 0, 3, 3);
 
-        // Update many times with very small delta
+        
         for (int i = 0; i < 1000; i++) {
             farm.update(0.01);
         }
@@ -408,13 +408,13 @@ class IndustryTest {
         Industry farm1 = new Industry("Farm1", IndustryType.FARM, 0, 0, 3, 3);
         Industry farm2 = new Industry("Farm2", IndustryType.FARM, 100, 100, 3, 3);
 
-        // Update both for a while
+        
         for (int i = 0; i < 100; i++) {
             farm1.update(0.1);
             farm2.update(0.1);
         }
 
-        // They should have different productivity due to different random seeds
+        
         assertNotEquals(farm1.getProductivity(), farm2.getProductivity());
     }
 
@@ -423,32 +423,32 @@ class IndustryTest {
         Industry farm1 = new Industry("Farm1", IndustryType.FARM, 50, 50, 3, 3);
         Industry farm2 = new Industry("Farm1", IndustryType.FARM, 50, 50, 3, 3);
 
-        // Update both identically
+        
         for (int i = 0; i < 100; i++) {
             farm1.update(0.1);
             farm2.update(0.1);
         }
 
-        // Should have same productivity due to same seed
+        
         assertEquals(farm1.getProductivity(), farm2.getProductivity());
     }
 
     @Test
     void testCompleteProductionChain() {
-        // Create a farm and bakery
+        
         Industry farm = new Industry("Farm", IndustryType.FARM, 0, 0, 3, 3);
         Industry bakery = new Industry("Bakery", IndustryType.BAKERY, 10, 10, 3, 3);
 
-        // Farm produces wheat
+        
         farm.update(10.0);
         int wheat = farm.getStorage().get(ResourceType.WHEAT);
         assertTrue(wheat > 0);
 
-        // Transfer wheat to bakery
+        
         int transferred = farm.takeFromStorage(ResourceType.WHEAT, wheat);
         bakery.deliverToStorage(ResourceType.WHEAT, transferred);
 
-        // Bakery produces bread
+        
         bakery.update(10.0);
         assertTrue(bakery.getStorage().get(ResourceType.BREAD) > 0);
     }

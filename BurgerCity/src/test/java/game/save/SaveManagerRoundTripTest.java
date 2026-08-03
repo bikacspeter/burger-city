@@ -78,7 +78,7 @@ public class SaveManagerRoundTripTest {
         SaveGame a = sm.createSave("a", map, player, tm, List.of(), List.of());
         SaveGame b = sm.createSave("b", map, player, tm, List.of(), List.of());
 
-        // Force deterministic ordering regardless of filesystem listing order.
+        
         overwriteSavedAtEpochMillis(tmp.resolve(a.getFileName()), 1_111L);
         overwriteSavedAtEpochMillis(tmp.resolve(b.getFileName()), 2_222L);
 
@@ -176,7 +176,7 @@ public class SaveManagerRoundTripTest {
 
         Map map = newEmptyMap(12, 12);
 
-        // Create a 4-way intersection at (5,5)
+        
         assertTrue(map.buildRoad(5, 5));
         assertTrue(map.buildRoad(5, 4));
         assertTrue(map.buildRoad(5, 6));
@@ -185,8 +185,8 @@ public class SaveManagerRoundTripTest {
 
         TrafficLight tl = new TrafficLight(5, 5);
         tl.setDurations(7.0, 3.0);
-        tl.update(7.5); // switches to CROSS_GREEN (time resets)
-        tl.update(1.0); // timeInState=1.0 in CROSS_GREEN
+        tl.update(7.5); 
+        tl.update(1.0); 
 
         assertTrue(map.buildBuilding(5, 5, tl), "TrafficLight should be buildable on an intersection");
 

@@ -73,7 +73,7 @@ public class SaveForestTest {
             assertNotEquals(TileType.FOREST, nonForest.getType());
             assertEquals(0, nonForest.getForestTrees());
         } finally {
-            // Best-effort cleanup
+            
             try (var stream = Files.list(tmp)) {
                 stream.forEach(p -> {
                     try {

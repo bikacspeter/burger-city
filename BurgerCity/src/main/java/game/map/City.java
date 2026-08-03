@@ -16,20 +16,20 @@ public class City {
     private int width;
     private int height;
 
-    // Passengers waiting to be picked up from this city.
+    
     private final ResourceInventory waiting;
 
-    // Goods demanded by this city (backlog to be delivered).
+    
     private final ResourceInventory demandBacklog;
 
-    // Smoothly varying rates.
+    
     private double passengersPerSecond;
     private double passengerRemainder;
     private final EnumMap<ResourceType, Double> goodsPerSecond;
     private final EnumMap<ResourceType, Double> goodsRemainder;
     private final Random rng;
 
-    /** Minimum 3x3 */
+    
     public City(String name, int originX, int originY, int width, int height) {
         this.name = name;
         this.originX = originX;
@@ -45,7 +45,7 @@ public class City {
 
         this.goodsPerSecond = new EnumMap<>(ResourceType.class);
         this.goodsRemainder = new EnumMap<>(ResourceType.class);
-        // Cities demand finished goods; keep it simple for now.
+        
         this.goodsPerSecond.put(ResourceType.HAMBURGER, Math.max(0.005, population / 200_000.0));
 
         this.rng = new Random((originX * 83492791L) ^ (originY * 15485863L) ^ (long) name.hashCode());
@@ -68,9 +68,9 @@ public class City {
             && y >= originY && y < originY + height;
     }
 
-    /**
-     * Economy tick: generates passengers and grows goods demand backlog.
-     */
+    
+
+
     public void update(double deltaSeconds) {
         if (deltaSeconds <= 0) return;
 
@@ -96,41 +96,41 @@ public class City {
         }
     }
 
-    /**
-     * Load passengers (or other waiting cargo) from the city.
-     */
+    
+
+
     public int load(ResourceType type, int maxAmount) {
         return waiting.removeUpTo(type, maxAmount);
     }
 
-    /**
-     * Deliver demanded goods into the city.
-     * @return accepted amount (limited by current demand backlog)
-     */
+    
+
+
+
     public int deliver(ResourceType type, int amount) {
         if (type == ResourceType.PASSENGERS) {
-            // Minimal model: any city can accept passengers.
+            
             return Math.max(0, amount);
         }
         return demandBacklog.removeUpTo(type, amount);
     }
 
-    // Backwards-compatible stubs (used by earlier skeleton).
+    
     public void generatePassengers() {
         update(1.0);
     }
 
     public void acceptGoods() {
-        // Goods acceptance is done via deliver(type, amount).
+        
     }
 
     private void updateRates(double deltaSeconds) {
-        // Passengers: slow drift with small noise.
+        
         double pull = ((population / 50_000.0) - passengersPerSecond) * (0.02 * deltaSeconds);
         double noise = (rng.nextDouble() * 2.0 - 1.0) * (0.01 * deltaSeconds);
         passengersPerSecond = clamp(passengersPerSecond + pull + noise, 0.002, 0.25);
 
-        // Goods demand: slow drift, tied to population.
+        
         for (var type : goodsPerSecond.keySet()) {
             double base = switch (type) {
                 case HAMBURGER -> population / 200_000.0;

@@ -11,8 +11,8 @@ public class Tile {
     private TileType type;
     private Building placedBuilding;
 
-    // Forest state: how many trees are on this tile (0..4).
-    // Only meaningful when type == FOREST.
+    
+    
     private int forestTrees;
 
     public Tile(int x, int y, TileType type) {

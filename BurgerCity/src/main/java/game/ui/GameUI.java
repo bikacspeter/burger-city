@@ -163,13 +163,13 @@ public class GameUI extends JFrame {
         setLayout(new BorderLayout());
 
         if (snapshot == null) {
-            // Time manager initialization
+            
             timeManager = new TimeManager();
 
-            // Játékos létrehozása kezdőpénzzel
+            
             player = new Player(15000);
 
-            // Térkép létrehozása és betöltése
+            
             map = new Map(50, 40);
             map.loadPredefined();
         } else {
@@ -186,7 +186,7 @@ public class GameUI extends JFrame {
         mapRenderer.setVehicles(vehicles);
         mapRenderer.setTrafficLights(trafficLights);
 
-        // Egér kezelése: drag (görgetés) és kattintás
+        
         final Point[] dragStart = {null};
         final boolean[] wasDragged = {false};
 
@@ -199,7 +199,7 @@ public class GameUI extends JFrame {
 
             @Override
             public void mouseReleased(MouseEvent e) {
-                // Ha nem volt drag, akkor kattintás volt
+                
                 if (roadBuildMode && !wasDragged[0]) {
                     handleRoadBuild(e.getX(), e.getY());
                 } else if (buyVehicleMode && !wasDragged[0]) {
@@ -213,7 +213,7 @@ public class GameUI extends JFrame {
                 } else if (demolishMode && !wasDragged[0]) {
                     handleDemolishClick(e.getX(), e.getY());
                 } else if (!wasDragged[0]) {
-                    // No mode active — inspect clicked building
+                    
                     handleInspectClick(e.getX(), e.getY());
                 }
                 dragStart[0] = null;
@@ -228,7 +228,7 @@ public class GameUI extends JFrame {
                     int dx = dragStart[0].x - e.getX();
                     int dy = dragStart[0].y - e.getY();
 
-                    // Ha elég nagyot mozgott, az drag
+                    
                     if (Math.abs(dx) > 2 || Math.abs(dy) > 2) {
                         wasDragged[0] = true;
                     }
@@ -240,7 +240,7 @@ public class GameUI extends JFrame {
             }
         });
 
-        // Egérgörgő zoom
+        
         mapRenderer.addMouseWheelListener(e -> {
             double zoomFactor = Math.pow(1.1, -e.getWheelRotation());
 
@@ -255,7 +255,7 @@ public class GameUI extends JFrame {
 
         add(mapRenderer, BorderLayout.CENTER);
 
-        // Right side: dashboard + navigable minimap
+        
         dashboard = new GameDashboard(player, map, vehicles);
         minimap = new MinimapUI(map, mapRenderer.getCamera(), () -> mapRenderer.repaint());
 
@@ -264,15 +264,15 @@ public class GameUI extends JFrame {
         rightPanel.add(minimap, BorderLayout.SOUTH);
         add(rightPanel, BorderLayout.EAST);
 
-        // Wrapper for top panels (time control + buttons)
+        
         JPanel topWrapper = new JPanel();
         topWrapper.setLayout(new BorderLayout());
 
-        // Time control panel
+        
         timeControlPanel = new TimeControlPanel(timeManager);
         topWrapper.add(timeControlPanel, BorderLayout.NORTH);
 
-        // Felső panel gombokkal
+        
         JPanel topPanel = new JPanel();
         topPanel.setLayout(new FlowLayout(FlowLayout.LEFT));
 
@@ -324,13 +324,13 @@ public class GameUI extends JFrame {
         topWrapper.add(topPanel, BorderLayout.SOUTH);
         add(topWrapper, BorderLayout.NORTH);
 
-        // Állapotsáv
+        
         lastStatusMessage = "Mini Transport Tycoon | BurgerCity";
         statusBar = new JLabel(" " + lastStatusMessage + " | Pénz: " + player.getMoney() + "$");
         statusBar.setBorder(BorderFactory.createEtchedBorder());
         add(statusBar, BorderLayout.SOUTH);
 
-        // Egyszerű játéktick: járművek mozgatása és újrarajzolás
+        
         lastTickNanos = System.nanoTime();
         gameTimer = new Timer(16, e -> tick());
         gameTimer.start();
@@ -369,7 +369,7 @@ public class GameUI extends JFrame {
                 updateStatus("Mentés elkészült: " + sg.getSaveName());
                 return;
             } catch (IllegalArgumentException ex) {
-                // Duplicate name (or other validation) coming from SaveManager.
+                
                 JOptionPane.showMessageDialog(this, ex.getMessage(), "Mentés", JOptionPane.WARNING_MESSAGE);
                 proposed = null;
             } catch (Exception ex) {
@@ -388,7 +388,7 @@ public class GameUI extends JFrame {
                 if (existing != null && existing.equalsIgnoreCase(normalized)) return true;
             }
         } catch (Exception ignored) {
-            // If we can't list saves, don't block saving here; SaveManager will still validate.
+            
         }
         return false;
     }
@@ -433,7 +433,7 @@ public class GameUI extends JFrame {
     private void toggleRoadBuildMode() {
         roadBuildMode = !roadBuildMode;
         if (roadBuildMode) {
-            // Módok kizárják egymást
+            
             if (buyVehicleMode) {
                 buyVehicleMode = false;
                 buyVehicleButton.setBackground(null);
@@ -475,7 +475,7 @@ public class GameUI extends JFrame {
     private void toggleBuyVehicleMode() {
         buyVehicleMode = !buyVehicleMode;
         if (buyVehicleMode) {
-            // Módok kizárják egymást
+            
             if (roadBuildMode) {
                 roadBuildMode = false;
                 buildRoadButton.setBackground(null);
@@ -560,7 +560,7 @@ public class GameUI extends JFrame {
     private void toggleBuyBuildingMode() {
         buyBuildingMode = !buyBuildingMode;
         if (buyBuildingMode) {
-            // Módok kizárják egymást
+            
             if (roadBuildMode) {
                 roadBuildMode = false;
                 buildRoadButton.setBackground(null);
@@ -616,7 +616,7 @@ public class GameUI extends JFrame {
         JDialog dialog = new JDialog(this, "Épület vásárlás", true);
         dialog.setLayout(new BorderLayout(10, 10));
 
-        // Title panel
+        
         JPanel titlePanel = new JPanel();
         titlePanel.setBackground(new Color(184, 134, 11));
         JLabel titleLabel = new JLabel("Válassz épület típust");
@@ -624,7 +624,7 @@ public class GameUI extends JFrame {
         titleLabel.setForeground(Color.WHITE);
         titlePanel.add(titleLabel);
 
-        // Options panel
+        
         JPanel optionsPanel = new JPanel(new GridLayout(3, 1, 10, 10));
         optionsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -652,7 +652,7 @@ public class GameUI extends JFrame {
         optionsPanel.add(stopBtn);
         optionsPanel.add(trafficLightBtn);
 
-        // Cancel button
+        
         JPanel bottomPanel = new JPanel();
         JButton cancelBtn = new JButton("Mégse");
         styleButton(cancelBtn, new Color(128, 128, 128));
@@ -673,7 +673,7 @@ public class GameUI extends JFrame {
     private void toggleBuyIndustryMode() {
         buyIndustryMode = !buyIndustryMode;
         if (buyIndustryMode) {
-            // Módok kizárják egymást
+            
             if (roadBuildMode) {
                 roadBuildMode = false;
                 buildRoadButton.setBackground(null);
@@ -729,7 +729,7 @@ public class GameUI extends JFrame {
         JDialog dialog = new JDialog(this, "Industry vásárlás", true);
         dialog.setLayout(new BorderLayout(10, 10));
 
-        // Title panel
+        
         JPanel titlePanel = new JPanel();
         titlePanel.setBackground(new Color(148, 0, 211));
         JLabel titleLabel = new JLabel("Válassz industry típust (foglal: 2x2)");
@@ -737,7 +737,7 @@ public class GameUI extends JFrame {
         titleLabel.setForeground(Color.WHITE);
         titlePanel.add(titleLabel);
 
-        // Options panel
+        
         JPanel optionsPanel = new JPanel(new GridLayout(3, 2, 10, 10));
         optionsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -779,7 +779,7 @@ public class GameUI extends JFrame {
         optionsPanel.add(pattyBtn);
         optionsPanel.add(burgerBtn);
 
-        // Cancel button
+        
         JPanel bottomPanel = new JPanel();
         JButton cancelBtn = new JButton("Mégse");
         styleButton(cancelBtn, new Color(128, 128, 128));
@@ -840,8 +840,8 @@ public class GameUI extends JFrame {
     }
 
     private void handleRoadBuild(int screenX, int screenY) {
-        int tileSize = 32; // MapRenderer.TILE_SIZE
-        // Kamera segítségével képernyő koordinátából világ koordinátába
+        int tileSize = 32; 
+        
         Camera camera = mapRenderer.getCamera();
         double worldX = camera.screenToWorldX(screenX);
         double worldY = camera.screenToWorldY(screenY);
@@ -858,19 +858,19 @@ public class GameUI extends JFrame {
             cost += ROAD_CLEAR_COST_PER_TREE * Math.max(1, target.getForestTrees());
         }
 
-        // Ellenőrzés: van-e elég pénz
+        
         if (!player.spendMoney(cost)) {
             updateStatus("Nincs elég pénz az út építéséhez! Szükséges: " + cost + "$");
             return;
         }
 
-        // Út építése
+        
         if (map.buildRoad(tileX, tileY)) {
             mapRenderer.repaint();
             updateStatus("Út sikeresen megépítve" + (clearing ? " (irtás)" : "") +
                     " (" + tileX + ", " + tileY + "). Pénz: " + player.getMoney() + "$");
         } else {
-            // Ha nem sikerült, visszaadjuk a pénzt
+            
             player.addMoney(cost);
             updateStatus("Erre a mezőre nem építhető út!");
         }
@@ -895,7 +895,7 @@ public class GameUI extends JFrame {
             return;
         }
 
-        // Special validation for Traffic Light: must be on ROAD intersection
+        
         if (selectedBuildableBuilding == BuildableBuilding.TRAFFIC_LIGHT) {
             if (targetTile.getType() != TileType.ROAD) {
                 updateStatus("Traffic Lights can only be built on roads!");
@@ -907,9 +907,9 @@ public class GameUI extends JFrame {
                 updateStatus("There is already a Traffic Light here!");
                 return;
             }
-            // Intersection check will be done in map.buildBuilding()
+            
         } else {
-            // Regular buildings: must be on GRASS
+            
             if (targetTile.getType() != TileType.GRASS) {
                 updateStatus("Csak üres fű mezőre lehet épületet rakni! Aktuális: " + targetTile.getType() + ".");
                 return;
@@ -934,7 +934,7 @@ public class GameUI extends JFrame {
         };
 
         if (map.buildBuilding(tileX, tileY, building)) {
-            // Add traffic light to the list for updates
+            
             if (building instanceof TrafficLight) {
                 trafficLights.add((TrafficLight) building);
                 mapRenderer.setTrafficLights(trafficLights);
@@ -964,7 +964,7 @@ public class GameUI extends JFrame {
         int tileX = (int) (worldX / tileSize);
         int tileY = (int) (worldY / tileSize);
 
-        // Pre-check the whole 2x2 footprint so we can explain failures.
+        
         Tile t00 = map.getTile(tileX, tileY);
         Tile t10 = map.getTile(tileX + 1, tileY);
         Tile t01 = map.getTile(tileX, tileY + 1);
@@ -1041,7 +1041,7 @@ public class GameUI extends JFrame {
         if (tile.getType() == TileType.INDUSTRY) {
             var ind = map.demolishIndustryAt(tileX, tileY);
             if (ind != null) {
-                // Remove vehicles serving this industry
+                
                 removeVehiclesServingBuilding(ind.getOriginX(), ind.getOriginY());
 
                 int refund = industryCost(ind.getIndustryType()) / 2;
@@ -1077,7 +1077,7 @@ public class GameUI extends JFrame {
         int tileX = (int) (worldX / tileSize);
         int tileY = (int) (worldY / tileSize);
 
-        // Step 1: choose a garage
+        
         if (selectedGarage == null) {
             Tile t = map.getTile(tileX, tileY);
             if (t == null || t.getPlacedBuilding() == null || !(t.getPlacedBuilding() instanceof Garage g)) {
@@ -1103,20 +1103,20 @@ public class GameUI extends JFrame {
             return;
         }
 
-        // Ha az első buildingre kattintottak újra és van legalább 2 building
+        
         if (!routeBuildings.isEmpty() && sameBuilding(routeBuildings.get(0), clicked) && routeBuildings.size() >= 2) {
-            // Körút lezárása
+            
             placeVehicleWithMultiStopRoute();
             return;
         }
 
-        // Ugyanazt a buildinget nem adhatjuk hozzá kétszer egymás után
+        
         if (!routeBuildings.isEmpty() && sameBuilding(routeBuildings.get(routeBuildings.size() - 1), clicked)) {
             updateStatus("Ez a building már az útvonal utolsó állomása. Válassz másikat!");
             return;
         }
 
-        // Building hozzáadása az útvonalhoz
+        
         routeBuildings.add(clicked);
         if (routeBuildings.size() == 1) {
             updateStatus("Első állomás: " + clicked.name() + ". Válassz további állomásokat vagy kattints újra az elsőre a lezáráshoz.");
@@ -1166,7 +1166,7 @@ public class GameUI extends JFrame {
 
         Vehicle best = null;
         double bestDist2 = Double.POSITIVE_INFINITY;
-        double radius = 16.0; // pixels in world-space
+        double radius = 16.0; 
         double r2 = radius * radius;
 
         for (Vehicle v : vehicles) {
@@ -1194,7 +1194,7 @@ public class GameUI extends JFrame {
             return;
         }
 
-        // Körút útvonalának építése: összekötjük az összes buildingot körbe
+        
         List<int[]> fullPath = buildCircularRoutePath();
         if (fullPath == null || fullPath.isEmpty()) {
             updateStatus("Nincs érvényes úthálózat az állomások között! Építs összefüggő utat.");
@@ -1220,7 +1220,7 @@ public class GameUI extends JFrame {
 
         int cost = vehicleCostByChoice(choice);
 
-        // Bus csak városok között mehet
+        
         if ((choice == 0 || choice == 2) && !allBuildingsAreCities()) {
             updateStatus("Bus csak városok között vásárolható (utas szállítás). Minden állomásnak városnak kell lennie!");
             clearVehicleSelection();
@@ -1245,7 +1245,7 @@ public class GameUI extends JFrame {
         v.setRejoinRouteAt(routeStart[0], routeStart[1]);
         v.setPath(fromGarage);
 
-        // Store all buildings in the route
+        
         storeRouteBuildingsInVehicle(v);
 
         vehicles.add(v);
@@ -1259,7 +1259,7 @@ public class GameUI extends JFrame {
     private List<int[]> buildCircularRoutePath() {
         List<int[]> fullPath = new ArrayList<>();
 
-        // Összekötjük az összes buildingot sorban, majd visszatérünk az elsőhöz
+        
         for (int i = 0; i < routeBuildings.size(); i++) {
             SelectedBuilding current = routeBuildings.get(i);
             SelectedBuilding next = routeBuildings.get((i + 1) % routeBuildings.size());
@@ -1270,12 +1270,12 @@ public class GameUI extends JFrame {
             );
 
             if (segment.isEmpty()) {
-                return null; // Nincs útvonal
+                return null; 
             }
 
-            // Hozzáadjuk a szegmenst, de az utolsó pontot csak egyszer (ne duplikáljuk)
+            
             for (int j = 0; j < segment.size(); j++) {
-                if (i == 0 || j > 0) { // Skip first point of non-first segments to avoid duplication
+                if (i == 0 || j > 0) { 
                     fullPath.add(segment.get(j));
                 }
             }
@@ -1350,7 +1350,7 @@ public class GameUI extends JFrame {
 
         int cost = vehicleCostByChoice(choice);
 
-        // Assignment-aligned constraint: bus transports passengers between cities.
+        
         if ((choice == 0 || choice == 2) && (!isCityBuilding(startBuilding) || !isCityBuilding(endBuilding))) {
             updateStatus("Bus csak két város között vásárolható (utas szállítás). Válassz 2 várost!");
             clearVehicleSelection();
@@ -1440,10 +1440,10 @@ public class GameUI extends JFrame {
         int tileX = (int) (worldX / tileSize);
         int tileY = (int) (worldY / tileSize);
 
-        // Check cities
+        
         for (City c : map.getCities()) {
             if (c.occupies(tileX, tileY)) {
-                // Make dashboard visible if hidden
+                
                 if (!dashboard.isDashboardVisible()) {
                     toggleDashboard();
                 }
@@ -1453,7 +1453,7 @@ public class GameUI extends JFrame {
             }
         }
 
-        // Check industries
+        
         for (Industry i : map.getIndustries()) {
             if (i.occupies(tileX, tileY)) {
                 if (!dashboard.isDashboardVisible()) {
@@ -1465,7 +1465,7 @@ public class GameUI extends JFrame {
             }
         }
 
-        // Check traffic lights
+        
         for (TrafficLight light : trafficLights) {
 
             if (light != null && light.getX() == tileX && light.getY() == tileY) {
@@ -1475,7 +1475,7 @@ public class GameUI extends JFrame {
             }
         }
 
-        // Clicked on empty space — clear inspection
+        
         if (dashboard.hasInspection()) {
             dashboard.clearInspection();
             updateStatus("Mini Transport Tycoon | BurgerCity");
@@ -1485,7 +1485,7 @@ public class GameUI extends JFrame {
     private void showTrafficLightSettings(TrafficLight light) {
         JPanel panel = new JPanel(new BorderLayout(5, 5));
 
-        // Settings panel
+        
         JPanel settingsPanel = new JPanel(new GridLayout(2, 2, 5, 5));
 
         JLabel mainLabel = new JLabel("Észak-Dél (Fő) időtartam (mp):");
@@ -1499,14 +1499,14 @@ public class GameUI extends JFrame {
         settingsPanel.add(crossLabel);
         settingsPanel.add(crossField);
 
-        // Törlő gomb
+        
         JButton deleteButton = new JButton("Lámpa törlése");
         deleteButton.setForeground(Color.RED);
 
         panel.add(settingsPanel, BorderLayout.CENTER);
         panel.add(deleteButton, BorderLayout.SOUTH);
 
-        // Egyedi párbeszéd opciók
+        
         Object[] options = {"Mentés", "Mégsem"};
         final boolean[] deleted = {false};
 
@@ -1520,11 +1520,11 @@ public class GameUI extends JFrame {
             );
 
             if (confirm == JOptionPane.YES_OPTION) {
-                // Remove from list
+                
                 trafficLights.remove(light);
                 mapRenderer.setTrafficLights(trafficLights);
 
-                // Remove from map tile
+                
                 Tile tile = map.getTile(light.getX(), light.getY());
                 if (tile != null) {
                     tile.setOccupied(false);
@@ -1535,7 +1535,7 @@ public class GameUI extends JFrame {
                 updateStatus("Traffic light deleted at (" + light.getX() + ", " + light.getY() + ")");
                 deleted[0] = true;
 
-                // Close the settings dialog
+                
                 Window window = SwingUtilities.getWindowAncestor(panel);
                 if (window != null) {
                     window.dispose();
@@ -1554,7 +1554,7 @@ public class GameUI extends JFrame {
             options[0]
         );
 
-        // Only update settings if not deleted and user clicked Save
+        
         if (!deleted[0] && result == JOptionPane.OK_OPTION) {
             try {
                 double mainDuration = Double.parseDouble(mainField.getText());
@@ -1578,7 +1578,7 @@ public class GameUI extends JFrame {
         boolean nowVisible = dashboard.toggleVisibility();
         toggleDashboardButton.setText(nowVisible ? "Vezérlőpult \u25C0" : "Vezérlőpult \u25B6");
 
-        // Do not resize the window; only relayout content.
+        
         revalidate();
         repaint();
     }
@@ -1588,18 +1588,18 @@ public class GameUI extends JFrame {
         double realDeltaSeconds = (now - lastTickNanos) / 1_000_000_000.0;
         lastTickNanos = now;
 
-        // Update time manager and get game-adjusted delta time
+        
         double gameDeltaSeconds = timeManager.update(realDeltaSeconds);
 
-        // Only update game logic if not paused (gameDeltaSeconds will be 0 when paused)
+        
         if (!timeManager.isPaused()) {
             map.updateEconomy(gameDeltaSeconds);
             map.updateForests(gameDeltaSeconds);
 
-            // Check and remove invalid traffic lights
+            
             removeInvalidTrafficLights();
 
-            // Update traffic lights
+            
             for (TrafficLight light : trafficLights) {
                 if (light != null) light.update(gameDeltaSeconds);
             }
@@ -1611,20 +1611,20 @@ public class GameUI extends JFrame {
             }
         }
 
-        // Refresh dashboard every ~30 frames (~0.5 seconds) to keep it responsive but efficient
+        
         dashboardRefreshCounter++;
         if (dashboardRefreshCounter >= 30) {
             dashboardRefreshCounter = 0;
             dashboard.refresh();
         }
 
-        // Always refresh time control panel
+        
         timeControlPanel.refresh();
 
         mapRenderer.repaint();
         if (minimap != null) minimap.repaint();
 
-        // Always reflect current money even without new status messages.
+        
         statusBar.setText(" " + lastStatusMessage + " | Pénz: " + player.getMoney() + "$");
     }
 
@@ -1633,12 +1633,12 @@ public class GameUI extends JFrame {
         statusBar.setText(" " + lastStatusMessage + " | Pénz: " + player.getMoney() + "$");
     }
 
-    /**
-     * Remove traffic lights that are no longer valid.
-     * A traffic light is invalid if:
-     * - The tile is no longer ROAD
-     * - The tile is no longer an intersection (< 3 road neighbors)
-     */
+    
+
+
+
+
+
     private void removeInvalidTrafficLights() {
         List<TrafficLight> toRemove = new ArrayList<>();
 
@@ -1648,7 +1648,7 @@ public class GameUI extends JFrame {
             if (!map.isTrafficLightValid(light.getX(), light.getY())) {
                 toRemove.add(light);
 
-                // Clear the tile
+                
  
                 Tile tile = map.getTile(light.getX(), light.getY());
                 if (tile != null) {
@@ -1670,10 +1670,10 @@ public class GameUI extends JFrame {
         }
     }
 
-    /**
-     * Remove all vehicles that serve a building at the given origin coordinates.
-     * Called when a City or Industry is demolished.
-     */
+    
+
+
+
     public void removeVehiclesServingBuilding(int originX, int originY) {
         List<Vehicle> toRemove = new ArrayList<>();
 
@@ -1695,14 +1695,14 @@ public class GameUI extends JFrame {
         }
     }
 
-    /**
-     * Create a styled vehicle type selection dialog
-     */
+    
+
+
     private Integer chooseVehicleType() {
         JDialog dialog = new JDialog(this, "Jármű vásárlás", true);
         dialog.setLayout(new BorderLayout(10, 10));
 
-        // Title panel
+        
         JPanel titlePanel = new JPanel();
         titlePanel.setBackground(new Color(65, 105, 225));
         JLabel titleLabel = new JLabel("Válassz jármű típust");
@@ -1710,7 +1710,7 @@ public class GameUI extends JFrame {
         titleLabel.setForeground(Color.WHITE);
         titlePanel.add(titleLabel);
 
-        // Options panel
+        
         JPanel optionsPanel = new JPanel(new GridLayout(2, 2, 10, 10));
         optionsPanel.setBorder(BorderFactory.createEmptyBorder(20, 20, 20, 20));
 
@@ -1745,7 +1745,7 @@ public class GameUI extends JFrame {
         optionsPanel.add(advBusBtn);
         optionsPanel.add(advTruckBtn);
 
-        // Cancel button
+        
         JPanel bottomPanel = new JPanel();
         JButton cancelBtn = new JButton("Mégse");
         styleButton(cancelBtn, new Color(128, 128, 128));
@@ -1763,9 +1763,9 @@ public class GameUI extends JFrame {
         return result[0];
     }
 
-    /**
-     * Create a styled dialog button with title and description
-     */
+    
+
+
     private JButton createDialogButton(String title, String description, Color color) {
         JButton button = new JButton();
         button.setLayout(new BorderLayout(5, 5));
@@ -1794,7 +1794,7 @@ public class GameUI extends JFrame {
 
         button.add(textPanel, BorderLayout.CENTER);
 
-        // Hover effect
+        
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {
@@ -1810,9 +1810,9 @@ public class GameUI extends JFrame {
         return button;
     }
 
-    /**
-     * Apply modern styling to a button with specified base color.
-     */
+    
+
+
     private void styleButton(JButton button, Color baseColor) {
         button.setBackground(baseColor);
         button.setForeground(Color.WHITE);
@@ -1825,7 +1825,7 @@ public class GameUI extends JFrame {
         button.setOpaque(true);
         button.setCursor(new Cursor(Cursor.HAND_CURSOR));
 
-        // Add hover effect
+        
         button.addMouseListener(new MouseAdapter() {
             @Override
             public void mouseEntered(MouseEvent e) {

@@ -27,14 +27,14 @@ public class Camera {
     }
 
     public void setZoom(double newZoom, double mouseX, double mouseY) {
-        // Világkoordináta a kurzor alatt zoom előtt
+        
         double worldXBeforeZoom = (mouseX + x) / zoom;
         double worldYBeforeZoom = (mouseY + y) / zoom;
 
-        // Zoom frissítése határokkal
+        
         zoom = Math.max(0.5, Math.min(3.0, newZoom));
 
-        // Kamera pozíció újraszámolása, hogy a kurzor alatt ugyanaz a pont maradjon
+        
         x = worldXBeforeZoom * zoom - mouseX;
         y = worldYBeforeZoom * zoom - mouseY;
 
@@ -51,9 +51,9 @@ public class Camera {
         clampPosition();
     }
 
-    /**
-     * Centers the camera on a world-space point (in unzoomed world pixels).
-     */
+    
+
+
     public void centerOnWorld(double worldX, double worldY) {
         x = worldX * zoom - viewportWidth / 2.0;
         y = worldY * zoom - viewportHeight / 2.0;
@@ -88,7 +88,7 @@ public class Camera {
         return viewportHeight;
     }
 
-    // Képernyő koordinátából világ koordinátába
+    
     public double screenToWorldX(double screenX) {
         return (screenX / zoom) + (x / zoom);
     }

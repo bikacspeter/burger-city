@@ -11,13 +11,13 @@ import java.util.EnumMap;
 import java.util.Map;
 import java.util.Objects;
 
-/**
- * Navigable minimap: shows the whole map + current camera viewport.
- * Click/drag moves the main camera.
- */
+
+
+
+
 public class MinimapUI extends JPanel {
 
-    // Keep consistent with MapRenderer's tile size.
+    
     private static final int TILE_SIZE = 32;
 
     private final game.map.Map map;
@@ -31,7 +31,7 @@ public class MinimapUI extends JPanel {
         this.camera = Objects.requireNonNull(camera, "camera");
         this.onNavigate = (onNavigate == null) ? () -> {} : onNavigate;
 
-        // Simple palette similar to MapRenderer.
+        
         tileColors.put(TileType.GRASS, new Color(100, 180, 80));
         tileColors.put(TileType.CITY, new Color(180, 180, 180));
         tileColors.put(TileType.INDUSTRY, new Color(200, 140, 60));
@@ -99,7 +99,7 @@ public class MinimapUI extends JPanel {
             return new RenderTransform(0, 0, 1.0, 1.0, 1, 1);
         }
 
-        // Fill the whole minimap panel: non-uniform scaling (no letterboxing).
+        
         double scaleX = panelW / (double) worldW;
         double scaleY = panelH / (double) worldH;
 
@@ -114,7 +114,7 @@ public class MinimapUI extends JPanel {
         g2.setRenderingHint(RenderingHints.KEY_ANTIALIASING, RenderingHints.VALUE_ANTIALIAS_OFF);
         g2.setRenderingHint(RenderingHints.KEY_RENDERING, RenderingHints.VALUE_RENDER_SPEED);
 
-        // Fill entire minimap panel to avoid black bars when aspect ratio doesn't match.
+        
         g2.setColor(tileColors.getOrDefault(TileType.GRASS, getBackground()));
         g2.fillRect(0, 0, getWidth(), getHeight());
 
@@ -122,7 +122,7 @@ public class MinimapUI extends JPanel {
         int drawW = getWidth();
         int drawH = getHeight();
 
-        // Draw tiles
+        
         for (int x = 0; x < map.getWidth(); x++) {
             for (int y = 0; y < map.getHeight(); y++) {
                 Tile tile = map.getTile(x, y);
@@ -142,7 +142,7 @@ public class MinimapUI extends JPanel {
             }
         }
 
-        // Viewport rectangle
+        
         double zoom = camera.getZoom();
         double viewLeftWorld = camera.getX() / zoom;
         double viewTopWorld = camera.getY() / zoom;
@@ -157,7 +157,7 @@ public class MinimapUI extends JPanel {
         g2.setColor(new Color(255, 60, 60));
         g2.drawRect(rx, ry, rw, rh);
 
-        // Border
+        
         g2.setColor(Color.BLACK);
         g2.drawRect(t.offsetX, t.offsetY, drawW, drawH);
     }

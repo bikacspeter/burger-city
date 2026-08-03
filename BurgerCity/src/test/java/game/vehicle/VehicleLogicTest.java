@@ -77,7 +77,7 @@ class VehicleLogicTest {
         t.setPath(List.of(new int[]{1, 1}, new int[]{2, 1}));
 
         TrafficLight light = new TrafficLight(2, 1);
-        // MAIN_GREEN means East/West is red.
+        
         light.restore("MAIN_GREEN", 0.0, 5.0, 5.0);
 
         t.chooseNextTarget(map, List.of(t), List.of(light));
@@ -90,7 +90,7 @@ class VehicleLogicTest {
     void chooseNextTarget_waitsWhenIntersectionHasCrossingTraffic() {
         Map map = newRoadMap(4, 4);
 
-        // T-intersection at (1,1)
+        
         assertTrue(map.buildRoad(1, 1));
         assertTrue(map.buildRoad(1, 0));
         assertTrue(map.buildRoad(1, 2));
@@ -104,7 +104,7 @@ class VehicleLogicTest {
 
         Truck b = new Truck();
         b.spawnAt(1, 1);
-        b.currentDirection = 1; // North/South
+        b.currentDirection = 1; 
 
         a.chooseNextTarget(map, List.of(a, b), null);
 
@@ -122,11 +122,11 @@ class VehicleLogicTest {
         a.spawnAt(0, 0);
         a.targetTileX = 1;
         a.targetTileY = 0;
-        a.currentDirection = 2; // East
+        a.currentDirection = 2; 
 
         Truck b = new Truck();
         b.spawnAt(1, 0);
-        b.currentDirection = 2; // East
+        b.currentDirection = 2; 
 
         a.adjustSpeedForTraffic(List.of(a, b));
         assertEquals(0.0, a.effectiveSpeed, 1e-9);

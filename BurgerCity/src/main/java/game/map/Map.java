@@ -19,7 +19,7 @@ public class Map {
     private List<City> cities;
     private List<Industry> industries;
 
-    // Forest simulation
+    
     private final Random forestRng = new Random(System.nanoTime());
     private double forestAccumulatorSeconds = 0;
 
@@ -31,18 +31,18 @@ public class Map {
         this.tiles = new Tile[width][height];
     }
 
-    /**
-     * Initializes all tiles to GRASS. Intended for save/load reconstruction.
-     * (The normal game flow uses {@link #loadPredefined()}.)
-     */
+    
+
+
+
     public void initGrassForLoad() {
         initGrass();
     }
 
-    /**
-     * Restores a forest tile during save/load reconstruction.
-     * Forest tiles are walkable and unoccupied, with a stored tree count (1..4).
-     */
+    
+
+
+
     public boolean setForestForLoad(int x, int y, int trees) {
         if (!inBounds(x, y)) return false;
         Tile t = getTile(x, y);
@@ -50,7 +50,7 @@ public class Map {
         if (t.getPlacedBuilding() != null) return false;
         if (t.isOccupied()) return false;
 
-        // Only restore onto base terrain.
+        
         if (t.getType() != TileType.GRASS && t.getType() != TileType.FOREST) return false;
 
         int clampedTrees = Math.max(1, Math.min(4, trees));
@@ -58,24 +58,24 @@ public class Map {
         return true;
     }
 
-    /** Előre definiált térkép betöltése */
+    
     public void loadPredefined() {
         initGrass();
 
-        // Városok - nagyobb méretűek és több van belőlük
-        addCity(new City("Burger City", 3, 3, 8, 7));          // Nagy központi város
-        addCity(new City("Meat Town", 35, 5, 6, 5));           // Középméretű város jobbra fent
-        addCity(new City("Wheat Valley", 5, 28, 7, 6));        // Középméretű város lent balra
-        addCity(new City("Factory District", 40, 30, 5, 5));   // Ipari város jobb alsó sarokban
-        addCity(new City("Green Hills", 20, 15, 6, 5));        // Középső város
+        
+        addCity(new City("Burger City", 3, 3, 8, 7));          
+        addCity(new City("Meat Town", 35, 5, 6, 5));           
+        addCity(new City("Wheat Valley", 5, 28, 7, 6));        
+        addCity(new City("Factory District", 40, 30, 5, 5));   
+        addCity(new City("Green Hills", 20, 15, 6, 5));        
 
-        // Random erdők minden új játékindításkor (2-3 összefüggő, szabálytalan folt)
+        
         spawnRandomForests();
     }
 
     private void spawnRandomForests() {
         Random rng = forestRng;
-        int forestPatches = 3 + rng.nextInt(4); // 3..6
+        int forestPatches = 3 + rng.nextInt(4); 
 
         for (int i = 0; i < forestPatches; i++) {
             int attempts = 900;
@@ -86,9 +86,9 @@ public class Map {
                 int x = rng.nextInt(width);
                 int y = rng.nextInt(height);
                 if (!canPlaceForestAt(x, y)) continue;
-                // Keep patches separated so we typically get 2-3 distinct clusters.
+                
                 if (hasNearbyForest(x, y, 2)) continue;
-                // Avoid hugging the very edge (helps the patch grow to an irregular shape)
+                
                 if (x < 1 || y < 1 || x > width - 2 || y > height - 2) continue;
                 seedX = x;
                 seedY = y;
@@ -97,7 +97,7 @@ public class Map {
 
             if (seedX == -1) continue;
 
-            int targetSize = 20 + rng.nextInt(31); // 20..50 tiles
+            int targetSize = 20 + rng.nextInt(31); 
             growForestPatch(seedX, seedY, targetSize, rng);
         }
     }
@@ -126,7 +126,7 @@ public class Map {
     private void setForestAt(int x, int y) {
         Tile t = getTile(x, y);
         if (t == null) return;
-        // Forest is still an empty field, just with trees.
+        
         t.setType(TileType.FOREST);
         if (t.getForestTrees() <= 0) {
             t.setForestTrees(1 + forestRng.nextInt(4));
@@ -146,7 +146,7 @@ public class Map {
     }
 
     private void growForestPatch(int seedX, int seedY, int targetSize, Random rng) {
-        // Connected patch growth: always expand from an already-placed forest tile.
+        
         List<int[]> forestTiles = new ArrayList<>();
         List<int[]> frontier = new ArrayList<>();
 
@@ -156,7 +156,7 @@ public class Map {
 
         int guard = 0;
         while (forestTiles.size() < targetSize && !frontier.isEmpty() && guard++ < targetSize * 40) {
-            // Pick a base tile; using the frontier keeps patches blobby, but we randomize for irregularity.
+            
             int[] base = (rng.nextInt(100) < 70)
                     ? frontier.get(rng.nextInt(frontier.size()))
                     : forestTiles.get(rng.nextInt(forestTiles.size()));
@@ -182,12 +182,12 @@ public class Map {
             }
 
             if (!placed) {
-                // If we can't expand from this edge anymore, drop some frontier tiles.
+                
                 if (!frontier.isEmpty() && rng.nextInt(100) < 40) {
                     frontier.remove(rng.nextInt(frontier.size()));
                 }
             } else {
-                // Occasionally trim frontier to create holes/indentations for a more irregular silhouette.
+                
                 if (!frontier.isEmpty() && rng.nextInt(100) < 15) {
                     frontier.remove(rng.nextInt(frontier.size()));
                 }
@@ -216,10 +216,10 @@ public class Map {
         }
     }
 
-    /**
-     * Adds a city and marks its footprint on the tile grid.
-     * Public for save/load reconstruction.
-     */
+    
+
+
+
     public void addCityForLoad(City city) {
         addCity(city);
     }
@@ -237,18 +237,18 @@ public class Map {
         }
     }
 
-    /**
-     * Adds an industry and marks its footprint on the tile grid.
-     * Public for save/load reconstruction.
-     */
+    
+
+
+
     public void addIndustryForLoad(Industry industry) {
         addIndustry(industry);
     }
 
-    /**
-     * Player-placed industry placement.
-     * Industries occupy a 2x2 area and are only allowed on unoccupied GRASS tiles.
-     */
+    
+
+
+
     public boolean buildIndustry(int originX, int originY, IndustryType type) {
         if (type == null) return false;
         if (!inBounds(originX, originY)) return false;
@@ -259,7 +259,7 @@ public class Map {
 
         if (overlapsAny(originX, originY, w, h)) return false;
 
-        // Enforce GRASS base terrain for the whole footprint.
+        
         for (int x = originX; x < originX + w; x++) {
             for (int y = originY; y < originY + h; y++) {
                 Tile t = getTile(x, y);
@@ -305,9 +305,9 @@ public class Map {
     public List<City> getCities() { return cities; }
     public List<Industry> getIndustries() { return industries; }
 
-    /**
-     * Returns all placed Garages on the map.
-     */
+    
+
+
     public List<Garage> getGarages() {
         List<Garage> out = new ArrayList<>();
         for (int x = 0; x < width; x++) {
@@ -324,9 +324,9 @@ public class Map {
         return out;
     }
 
-    /**
-     * Economy tick: updates city demand/passenger generation and industry production.
-     */
+    
+
+
     public void updateEconomy(double deltaSeconds) {
         if (deltaSeconds <= 0) return;
         for (City c : cities) {
@@ -337,12 +337,12 @@ public class Map {
         }
     }
 
-    /**
-     * Forest simulation tick:
-     * - Trees can appear on empty grass tiles.
-     * - A forest tile can grow from 1..4 trees over time.
-     * - If a tile has 3 or 4 trees, it can spread to adjacent empty grass tiles.
-     */
+    
+
+
+
+
+
     public void updateForests(double deltaSeconds) {
         if (deltaSeconds <= 0) return;
         forestAccumulatorSeconds += deltaSeconds;
@@ -355,11 +355,11 @@ public class Map {
     private record ForestChange(int x, int y, int newTrees) {}
 
     private void forestStep1s() {
-        // Probabilities are per-second.
-        // Slower growth: ~1/8 speed (half of the previous tuning).
-        double spontaneousSpawnP = 0.0000025; // any empty grass tile can sprout
-        double growP = 0.0125; // forest tile can gain +1 tree (until 4)
-        double spreadP = 0.01; // 3-4 tree tile can seed a neighbor
+        
+        
+        double spontaneousSpawnP = 0.0000025; 
+        double growP = 0.0125; 
+        double spreadP = 0.01; 
 
         List<ForestChange> changes = new ArrayList<>();
 
@@ -402,7 +402,7 @@ public class Map {
             }
         }
 
-        // Apply changes (avoid overwriting roads/buildings).
+        
         for (ForestChange c : changes) {
             if (!inBounds(c.x, c.y)) continue;
             Tile t = getTile(c.x, c.y);
@@ -414,11 +414,11 @@ public class Map {
         }
     }
 
-    /**
-     * Player-built building placement.
-     * Most buildings only allowed on unoccupied GRASS tiles.
-     * TrafficLight is special: only allowed on ROAD intersections (3+ connections).
-     */
+    
+
+
+
+
     public boolean buildBuilding(int x, int y, Building building) {
         if (building == null) return false;
         if (!inBounds(x, y)) return false;
@@ -426,29 +426,29 @@ public class Map {
         Tile tile = getTile(x, y);
         if (tile == null) return false;
 
-        // Special case: TrafficLight can only be built on road intersections
+        
         if (building instanceof game.building.TrafficLight) {
             if (tile.getType() != TileType.ROAD) return false;
-            // Don't allow overwriting an existing traffic light (or any other placed building on this road tile).
-            //if (tile.isOccupied() || tile.getPlacedBuilding() != null) return false;
+            
+            
             if (tile.isOccupied() && tile.getType() != TileType.ROAD) return false;
 
-            // Check if it's an intersection (3 or 4 road neighbors)
+            
             int roadNeighbors = countRoadNeighbors(x, y);
-            if (roadNeighbors < 3) return false; // Must be at least a 3-way intersection
+            if (roadNeighbors < 3) return false; 
 
-            // Don't change tile type - keep it as ROAD
+            
             tile.setOccupied(true);
             tile.setPlacedBuilding(building);
             return true;
         }
 
-        // Garage must be connected to the road network (adjacent ROAD tile)
+        
         if (building instanceof Garage) {
             if (!hasAdjacentRoad(x, y)) return false;
         }
 
-        // Regular buildings: only on grass
+        
         if (tile.getType() != TileType.GRASS || tile.isOccupied()) return false;
 
         tile.setType(TileType.BUILDING);
@@ -458,13 +458,13 @@ public class Map {
         return true;
     }
 
-    /**
-     * Save/load-only building placement.
-     * Bypasses normal gameplay validation (e.g. Garage road adjacency), but still refuses:
-     * - out-of-bounds tiles
-     * - city/industry footprint tiles
-     * - tiles that already have a placed building
-     */
+    
+
+
+
+
+
+
     public boolean placeBuildingForLoad(int x, int y, Building building) {
         if (building == null) return false;
         if (!inBounds(x, y)) return false;
@@ -472,21 +472,21 @@ public class Map {
         Tile tile = getTile(x, y);
         if (tile == null) return false;
 
-        // Never overwrite an existing placed building during load.
+        
         if (tile.getPlacedBuilding() != null) return false;
 
-        // Never place on city/industry footprint tiles.
+        
         if (tile.getType() == TileType.CITY || tile.getType() == TileType.INDUSTRY) return false;
 
         if (building instanceof game.building.TrafficLight) {
-            // TrafficLight must live on a ROAD tile. If the save is inconsistent, refuse.
+            
             if (tile.getType() != TileType.ROAD) return false;
             tile.setOccupied(true);
             tile.setPlacedBuilding(building);
             return true;
         }
 
-        // Regular building tile.
+        
         tile.setType(TileType.BUILDING);
         tile.setWalkable(false);
         tile.setOccupied(true);
@@ -504,15 +504,15 @@ public class Map {
         return t != null && t.getType() == TileType.ROAD;
     }
 
-    /**
-     * Count how many neighbors of a tile are ROAD tiles (for intersection detection).
-     */
+    
+
+
     private int countRoadNeighbors(int x, int y) {
         int count = 0;
-        if (isRoadTile(x, y - 1)) count++; // North
-        if (isRoadTile(x + 1, y)) count++; // East
-        if (isRoadTile(x, y + 1)) count++; // South
-        if (isRoadTile(x - 1, y)) count++; // West
+        if (isRoadTile(x, y - 1)) count++; 
+        if (isRoadTile(x + 1, y)) count++; 
+        if (isRoadTile(x, y + 1)) count++; 
+        if (isRoadTile(x - 1, y)) count++; 
         return count;
     }
 
@@ -531,9 +531,9 @@ public class Map {
         return type == TileType.ROAD || type == TileType.BUILDING;
     }
 
-    /**
-     * Demolishes a player-built building tile and returns the building if any.
-     */
+    
+
+
     public Building demolishBuilding(int x, int y) {
         if (!inBounds(x, y)) return null;
         Tile tile = getTile(x, y);
@@ -550,9 +550,9 @@ public class Map {
         return b;
     }
 
-    /**
-     * Demolishes a road tile (no refund handled here).
-     */
+    
+
+
     public boolean demolishRoad(int x, int y) {
         if (!inBounds(x, y)) return false;
         Tile tile = getTile(x, y);
@@ -562,13 +562,13 @@ public class Map {
         tile.setType(TileType.GRASS);
         tile.setWalkable(true);
         tile.setOccupied(false);
-        tile.setPlacedBuilding(null); // Remove any traffic light
+        tile.setPlacedBuilding(null); 
         return true;
     }
 
-    /**
-     * Demolishes a FOREST tile back to GRASS.
-     */
+    
+
+
     public boolean demolishForest(int x, int y) {
         if (!inBounds(x, y)) return false;
         Tile tile = getTile(x, y);
@@ -582,27 +582,27 @@ public class Map {
         return true;
     }
 
-    /**
-     * Check if a traffic light at (x, y) is still valid.
-     * A traffic light is valid if:
-     * - The tile is ROAD
-     * - The tile has at least 3 road neighbors (intersection)
-     */
+    
+
+
+
+
+
     public boolean isTrafficLightValid(int x, int y) {
         if (!inBounds(x, y)) return false;
         Tile tile = getTile(x, y);
         if (tile == null) return false;
         if (tile.getType() != TileType.ROAD) return false;
 
-        // Check if it's still an intersection
+        
         int roadNeighbors = countRoadNeighbors(x, y);
         return roadNeighbors >= 3;
     }
 
-    /**
-     * Demolishes an industry by clicking any tile inside its footprint.
-     * Returns the removed industry, or null if there is none.
-     */
+    
+
+
+
     public Industry demolishIndustryAt(int x, int y) {
         if (!inBounds(x, y)) return null;
 
@@ -612,7 +612,7 @@ public class Map {
             if (ind == null) continue;
             if (!ind.occupies(x, y)) continue;
 
-            // Clear footprint
+            
             for (int tx = ind.getOriginX(); tx < ind.getOriginX() + ind.getWidth(); tx++) {
                 for (int ty = ind.getOriginY(); ty < ind.getOriginY() + ind.getHeight(); ty++) {
                     if (!inBounds(tx, ty)) continue;
@@ -631,11 +631,11 @@ public class Map {
         return null;
     }
 
-    /**
-     * Finds a ROAD-only path between two rectangular areas (e.g., City/Industry footprints).
-     * The path starts at a ROAD tile adjacent to area A and ends at a ROAD tile adjacent to area B.
-     * Returns an empty list if no valid path exists.
-     */
+    
+
+
+
+
     public List<int[]> findRoadPathBetweenAreas(int ax, int ay, int aw, int ah,
                                                 int bx, int by, int bw, int bh) {
         List<int[]> starts = adjacentRoadTiles(ax, ay, aw, ah);
@@ -686,7 +686,7 @@ public class Map {
 
         if (found == -1) return List.of();
 
-        // Reconstruct path
+        
         List<int[]> path = new ArrayList<>();
         int cur = found;
         while (cur != -2) {
@@ -696,7 +696,7 @@ public class Map {
             cur = parent[cur];
         }
 
-        // Reverse in-place
+        
         for (int i = 0, j = path.size() - 1; i < j; i++, j--) {
             int[] tmp = path.get(i);
             path.set(i, path.get(j));
@@ -705,10 +705,10 @@ public class Map {
         return path;
     }
 
-    /**
-     * Finds a ROAD-only path between two ROAD tiles (inclusive).
-     * Returns an empty list if no valid path exists.
-     */
+    
+
+
+
     public List<int[]> findRoadPathBetweenRoadTiles(int startX, int startY, int targetX, int targetY) {
         if (!inBounds(startX, startY) || !inBounds(targetX, targetY)) return List.of();
         Tile s = getTile(startX, startY);
@@ -767,9 +767,9 @@ public class Map {
         return path;
     }
 
-    /**
-     * Returns ROAD tiles adjacent to the given rectangular area.
-     */
+    
+
+
     public List<int[]> adjacentRoadTilesForArea(int ox, int oy, int w, int h) {
         return adjacentRoadTiles(ox, oy, w, h);
     }
@@ -795,13 +795,13 @@ public class Map {
     private List<int[]> adjacentRoadTiles(int ox, int oy, int w, int h) {
         List<int[]> result = new ArrayList<>();
 
-        // Above and below
+        
         for (int x = ox; x < ox + w; x++) {
             addIfRoad(result, x, oy - 1);
             addIfRoad(result, x, oy + h);
         }
 
-        // Left and right
+        
         for (int y = oy; y < oy + h; y++) {
             addIfRoad(result, ox - 1, y);
             addIfRoad(result, ox + w, y);
@@ -818,12 +818,12 @@ public class Map {
         }
     }
 
-    /**
-     * Út építése a megadott koordinátára
-     * @param x Az út x koordinátája
-     * @param y Az út y koordinátája
-     * @return true ha sikeres volt az építés, false egyébként
-     */
+    
+
+
+
+
+
     public boolean buildRoad(int x, int y) {
         if (!inBounds(x, y)) {
             return false;
@@ -831,8 +831,8 @@ public class Map {
 
         Tile tile = getTile(x, y);
 
-        // Only on empty GRASS or FOREST tiles.
-        // FOREST is allowed (clearing happens implicitly).
+        
+        
         if (tile.isOccupied() || tile.getPlacedBuilding() != null) {
             return false;
         }
@@ -844,7 +844,7 @@ public class Map {
             tile.setForestTrees(0);
         }
 
-        // Út létrehozása
+        
         tile.setType(TileType.ROAD);
         tile.setWalkable(true);
         tile.setOccupied(true);

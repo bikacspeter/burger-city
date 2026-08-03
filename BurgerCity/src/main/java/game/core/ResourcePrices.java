@@ -2,14 +2,14 @@ package game.core;
 
 import game.resource.ResourceType;
 
-/**
- * Minimal revenue table for deliveries.
- */
+
+
+
 public final class ResourcePrices {
 
     private ResourcePrices() {}
 
-    /** Revenue per delivered unit. */
+    
     public static int revenuePerUnit(ResourceType type) {
         if (type == null) return 0;
         return switch (type) {

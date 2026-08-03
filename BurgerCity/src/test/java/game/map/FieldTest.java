@@ -14,14 +14,14 @@ class FieldTest {
         field = new Field();
     }
 
-    // ==================== Constructor Tests ====================
+    
 
     @Test
     void testConstructorCreatesField() {
         assertNotNull(field);
     }
 
-    // ==================== GrowTree Tests ====================
+    
 
     @Test
     void testGrowTreeDoesNotThrowException() {
@@ -37,7 +37,7 @@ class FieldTest {
         });
     }
 
-    // ==================== ClearForest Tests ====================
+    
 
     @Test
     void testClearForestReturnsZero() {
@@ -58,7 +58,7 @@ class FieldTest {
         }
     }
 
-    // ==================== Integration Tests ====================
+    
 
     @Test
     void testFieldOperationsInSequence() {
@@ -76,7 +76,7 @@ class FieldTest {
         field1.growTree();
         field2.clearForest();
 
-        // Both should work independently without issues
+        
         assertNotSame(field1, field2);
     }
 }

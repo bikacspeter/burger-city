@@ -17,7 +17,7 @@ class MapTest {
         map = new Map(50, 50);
     }
 
-    // ==================== Constructor Tests ====================
+    
 
     @Test
     void testConstructorCreatesMap() {
@@ -60,7 +60,7 @@ class MapTest {
         assertTrue(map.getIndustries().isEmpty());
     }
 
-    // ==================== Tile Access Tests ====================
+    
 
     @Test
     void testGetTileReturnsNullBeforeInit() {
@@ -98,7 +98,7 @@ class MapTest {
         }
     }
 
-    // ==================== InitGrassForLoad Tests ====================
+    
 
     @Test
     void testInitGrassForLoadCreatesAllTiles() {
@@ -130,7 +130,7 @@ class MapTest {
         assertEquals(TileType.GRASS, tile.getType());
     }
 
-    // ==================== Forest Tests ====================
+    
 
     @Test
     void testSetForestForLoadValidCoordinates() {
@@ -196,11 +196,11 @@ class MapTest {
         assertFalse(result);
     }
 
-    // ==================== City Tests ====================
+    
 
     @Test
     void testAddCityForLoad() {
-        map.initGrassForLoad(); // Initialize tiles first
+        map.initGrassForLoad(); 
         City city = new City("TestCity", 10, 10, 5, 5);
         map.addCityForLoad(city);
 
@@ -211,7 +211,7 @@ class MapTest {
 
     @Test
     void testAddMultipleCities() {
-        map.initGrassForLoad(); // Initialize tiles first
+        map.initGrassForLoad(); 
         City city1 = new City("City1", 10, 10, 5, 5);
         City city2 = new City("City2", 20, 20, 5, 5);
 
@@ -223,7 +223,7 @@ class MapTest {
 
     @Test
     void testGetCitiesReturnsCorrectList() {
-        map.initGrassForLoad(); // Initialize tiles first
+        map.initGrassForLoad(); 
         City city = new City("TestCity", 10, 10, 5, 5);
         map.addCityForLoad(city);
 
@@ -233,11 +233,11 @@ class MapTest {
         assertEquals("TestCity", cities.get(0).getName());
     }
 
-    // ==================== Industry Tests ====================
+    
 
     @Test
     void testAddIndustryForLoad() {
-        map.initGrassForLoad(); // Initialize tiles first
+        map.initGrassForLoad(); 
         Industry industry = new Industry("TestFarm", IndustryType.FARM, 15, 15, 4, 4);
         map.addIndustryForLoad(industry);
 
@@ -248,7 +248,7 @@ class MapTest {
 
     @Test
     void testAddMultipleIndustries() {
-        map.initGrassForLoad(); // Initialize tiles first
+        map.initGrassForLoad(); 
         Industry industry1 = new Industry("Farm1", IndustryType.FARM, 10, 10, 4, 4);
         Industry industry2 = new Industry("Bakery1", IndustryType.BAKERY, 20, 20, 3, 3);
 
@@ -260,7 +260,7 @@ class MapTest {
 
     @Test
     void testGetIndustriesReturnsCorrectList() {
-        map.initGrassForLoad(); // Initialize tiles first
+        map.initGrassForLoad(); 
         Industry industry = new Industry("TestFarm", IndustryType.FARM, 15, 15, 4, 4);
         map.addIndustryForLoad(industry);
 
@@ -270,7 +270,7 @@ class MapTest {
         assertEquals("TestFarm", industries.get(0).getName());
     }
 
-    // ==================== Garage Tests ====================
+    
 
     @Test
     void testGetGaragesEmptyInitially() {
@@ -286,7 +286,7 @@ class MapTest {
 
         Garage garage = new Garage(5, 5);
         Tile tile = map.getTile(5, 5);
-        tile.setType(TileType.BUILDING); // Must set type to BUILDING
+        tile.setType(TileType.BUILDING); 
         tile.setPlacedBuilding(garage);
 
         List<Garage> garages = map.getGarages();
@@ -301,22 +301,22 @@ class MapTest {
         Garage garage1 = new Garage(5, 5);
         Garage garage2 = new Garage(10, 10);
 
-        map.getTile(5, 5).setType(TileType.BUILDING); // Must set type to BUILDING
+        map.getTile(5, 5).setType(TileType.BUILDING); 
         map.getTile(5, 5).setPlacedBuilding(garage1);
-        map.getTile(10, 10).setType(TileType.BUILDING); // Must set type to BUILDING
+        map.getTile(10, 10).setType(TileType.BUILDING); 
         map.getTile(10, 10).setPlacedBuilding(garage2);
 
         List<Garage> garages = map.getGarages();
         assertEquals(2, garages.size());
     }
 
-    // ==================== LoadPredefined Tests ====================
+    
 
     @Test
     void testLoadPredefinedCreatesMap() {
         map.loadPredefined();
 
-        // Should have initialized tiles
+        
         assertNotNull(map.getTile(0, 0));
     }
 
@@ -359,7 +359,7 @@ class MapTest {
         assertTrue(hasForest);
     }
 
-    // ==================== Dimension Tests ====================
+    
 
     @Test
     void testGetWidthReturnsinCorrectValue() {
@@ -373,7 +373,7 @@ class MapTest {
         assertEquals(40, customMap.getHeight());
     }
 
-    // ==================== Edge Case Tests ====================
+    
 
     @Test
     void testMapWithZeroDimensions() {
@@ -395,7 +395,7 @@ class MapTest {
     @Test
     void testAddNullCity() {
         map.initGrassForLoad();
-        // addCityForLoad will throw NullPointerException for null
+        
         assertThrows(NullPointerException.class, () -> {
             map.addCityForLoad(null);
         });
@@ -404,33 +404,33 @@ class MapTest {
     @Test
     void testAddNullIndustry() {
         map.initGrassForLoad();
-        // addIndustryForLoad will throw NullPointerException for null
+        
         assertThrows(NullPointerException.class, () -> {
             map.addIndustryForLoad(null);
         });
     }
 
-    // ==================== Integration Tests ====================
+    
 
     @Test
     void testCompleteMapSetup() {
         map.initGrassForLoad();
 
-        // Add cities
+        
         City city1 = new City("City1", 5, 5, 5, 5);
         City city2 = new City("City2", 20, 20, 6, 6);
         map.addCityForLoad(city1);
         map.addCityForLoad(city2);
 
-        // Add industries
+        
         Industry farm = new Industry("Farm", IndustryType.FARM, 30, 30, 4, 4);
         map.addIndustryForLoad(farm);
 
-        // Add forests
+        
         map.setForestForLoad(40, 40, 3);
         map.setForestForLoad(41, 40, 2);
 
-        // Verify everything is set up correctly
+        
         assertEquals(2, map.getCities().size());
         assertEquals(1, map.getIndustries().size());
         assertEquals(TileType.FOREST, map.getTile(40, 40).getType());
@@ -482,7 +482,7 @@ class MapTest {
         assertEquals(0, map2.getCities().size());
     }
 
-    // ==================== Bounds Checking Tests ====================
+    
 
     @Test
     void testNegativeCoordinatesOutOfBounds() {
@@ -502,17 +502,17 @@ class MapTest {
     void testBoundaryCoordinates() {
         map.initGrassForLoad();
 
-        // Valid boundary
+        
         assertNotNull(map.getTile(0, 0));
         assertNotNull(map.getTile(49, 49));
 
-        // Invalid boundary
+        
         assertNull(map.getTile(50, 50));
         assertNull(map.getTile(50, 0));
         assertNull(map.getTile(0, 50));
     }
 
-    // ==================== updateEconomy Tests ====================
+    
 
     @Test
     void testUpdateEconomyWithNegativeDelta() {
@@ -520,7 +520,7 @@ class MapTest {
         City city = new City("TestCity", 10, 10, 5, 5);
         map.addCityForLoad(city);
 
-        // Should not crash with negative delta
+        
         map.updateEconomy(-1.0);
         assertTrue(true);
     }
@@ -531,7 +531,7 @@ class MapTest {
         City city = new City("TestCity", 10, 10, 5, 5);
         map.addCityForLoad(city);
 
-        // Should not crash with zero delta
+        
         map.updateEconomy(0.0);
         assertTrue(true);
     }
@@ -542,7 +542,7 @@ class MapTest {
         City city = new City("TestCity", 10, 10, 5, 5);
         map.addCityForLoad(city);
 
-        // Should update city economics
+        
         map.updateEconomy(1.0);
         assertTrue(true);
     }
@@ -558,7 +558,7 @@ class MapTest {
         map.addCityForLoad(city2);
         map.addIndustryForLoad(industry);
 
-        // Should update all entities
+        
         map.updateEconomy(2.0);
         assertTrue(true);
     }
@@ -567,19 +567,19 @@ class MapTest {
     void testUpdateEconomyWithEmptyMap() {
         map.initGrassForLoad();
 
-        // Should handle empty map gracefully
+        
         map.updateEconomy(1.0);
         assertTrue(true);
     }
 
-    // ==================== updateForests Tests ====================
+    
 
     @Test
     void testUpdateForestsWithNegativeDelta() {
         map.initGrassForLoad();
         map.setForestForLoad(10, 10, 2);
 
-        // Should not update with negative delta
+        
         map.updateForests(-1.0);
         assertTrue(true);
     }
@@ -589,7 +589,7 @@ class MapTest {
         map.initGrassForLoad();
         map.setForestForLoad(10, 10, 2);
 
-        // Should not update with zero delta
+        
         map.updateForests(0.0);
         assertTrue(true);
     }
@@ -599,7 +599,7 @@ class MapTest {
         map.initGrassForLoad();
         map.setForestForLoad(10, 10, 2);
 
-        // Should accumulate time
+        
         map.updateForests(0.5);
         assertTrue(true);
     }
@@ -610,7 +610,7 @@ class MapTest {
         map.setForestForLoad(10, 10, 3);
         map.setForestForLoad(11, 10, 3);
 
-        // Should process multiple forest steps
+        
         map.updateForests(5.0);
         assertTrue(true);
     }
@@ -620,17 +620,17 @@ class MapTest {
         map.initGrassForLoad();
         map.setForestForLoad(25, 25, 1);
 
-        // Update many times to potentially see growth
+        
         for (int i = 0; i < 100; i++) {
             map.updateForests(1.0);
         }
 
-        // Forest may have grown (probabilistic)
+        
         Tile tile = map.getTile(25, 25);
         assertTrue(tile.getForestTrees() >= 1 && tile.getForestTrees() <= 4);
     }
 
-    // ==================== demolishForest Tests ====================
+    
 
     @Test
     void testDemolishForestValidForest() {
@@ -683,13 +683,13 @@ class MapTest {
         map.setForestForLoad(15, 15, 3);
 
         assertTrue(map.demolishForest(15, 15));
-        assertFalse(map.demolishForest(15, 15)); // Already demolished
+        assertFalse(map.demolishForest(15, 15)); 
 
         Tile tile = map.getTile(15, 15);
         assertEquals(TileType.GRASS, tile.getType());
     }
 
-    // ==================== isTrafficLightValid Tests ====================
+    
 
     @Test
     void testIsTrafficLightValidOnRoadTile() {
@@ -697,7 +697,7 @@ class MapTest {
         Tile tile = map.getTile(20, 20);
         tile.setType(TileType.ROAD);
 
-        // Create adjacent roads to form an intersection
+        
         map.getTile(19, 20).setType(TileType.ROAD);
         map.getTile(21, 20).setType(TileType.ROAD);
         map.getTile(20, 19).setType(TileType.ROAD);
@@ -741,7 +741,7 @@ class MapTest {
         Tile tile = map.getTile(20, 20);
         tile.setType(TileType.ROAD);
 
-        // Only one adjacent road (dead end)
+        
         map.getTile(19, 20).setType(TileType.ROAD);
 
         boolean result = map.isTrafficLightValid(20, 20);
@@ -754,7 +754,7 @@ class MapTest {
         Tile tile = map.getTile(20, 20);
         tile.setType(TileType.ROAD);
 
-        // Two adjacent roads (straight line, not intersection)
+        
         map.getTile(19, 20).setType(TileType.ROAD);
         map.getTile(21, 20).setType(TileType.ROAD);
 
@@ -762,7 +762,7 @@ class MapTest {
         assertFalse(result);
     }
 
-    // ==================== demolishIndustryAt Tests ====================
+    
 
     @Test
     void testDemolishIndustryAtValidIndustry() {
@@ -802,7 +802,7 @@ class MapTest {
         Industry industry = new Industry("TestFarm", IndustryType.FARM, 10, 10, 4, 4);
         map.addIndustryForLoad(industry);
 
-        // Try to demolish at a location outside the industry's bounds
+        
         Industry demolished = map.demolishIndustryAt(20, 20);
 
         assertNull(demolished);
@@ -815,7 +815,7 @@ class MapTest {
         Industry industry = new Industry("TestFarm", IndustryType.FARM, 10, 10, 4, 4);
         map.addIndustryForLoad(industry);
 
-        // Demolish at any coordinate within the industry's area
+        
         Industry demolished = map.demolishIndustryAt(11, 11);
 
         assertNotNull(demolished);
@@ -846,6 +846,6 @@ class MapTest {
         map.addIndustryForLoad(industry);
 
         assertNotNull(map.demolishIndustryAt(10, 10));
-        assertNull(map.demolishIndustryAt(10, 10)); // Already demolished
+        assertNull(map.demolishIndustryAt(10, 10)); 
     }
 }

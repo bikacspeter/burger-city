@@ -21,7 +21,7 @@ public class MainMenuUI extends JFrame {
         setLocationRelativeTo(null);
         setResizable(true);
 
-        // Background panel with custom painting
+        
         backgroundPanel = new JPanel() {
             private Image backgroundImage;
 
@@ -43,7 +43,7 @@ public class MainMenuUI extends JFrame {
                 if (backgroundImage != null) {
                     g.drawImage(backgroundImage, 0, 0, getWidth(), getHeight(), this);
                 } else {
-                    // Fallback gradient background if image fails to load
+                    
                     Graphics2D g2d = (Graphics2D) g;
                     GradientPaint gradient = new GradientPaint(
                             0, 0, new Color(34, 193, 195),
@@ -57,16 +57,16 @@ public class MainMenuUI extends JFrame {
 
         backgroundPanel.setLayout(new GridBagLayout());
 
-        // Create button panel
+        
         JPanel buttonPanel = new JPanel();
         buttonPanel.setOpaque(false);
         buttonPanel.setLayout(new BoxLayout(buttonPanel, BoxLayout.Y_AXIS));
 
-        // Create styled buttons
+        
         JButton newGameButton = createStyledButton("Új játék indítása");
         JButton loadGameButton = createStyledButton("Mentett játék indítása");
 
-        // Add action listeners
+        
         newGameButton.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -120,12 +120,12 @@ public class MainMenuUI extends JFrame {
         });
 
 
-        // Add buttons to panel with spacing
+        
         buttonPanel.add(newGameButton);
         buttonPanel.add(Box.createRigidArea(new Dimension(0, 20)));
         buttonPanel.add(loadGameButton);
 
-        // Add button panel to background
+        
         backgroundPanel.add(buttonPanel);
 
         add(backgroundPanel);
@@ -142,10 +142,10 @@ public class MainMenuUI extends JFrame {
         button.setContentAreaFilled(false);
         button.setOpaque(true);
 
-        // Gradient background
+        
         button.setBackground(new Color(52, 152, 219));
 
-        // Custom painting for gradient and rounded corners
+        
         button.setUI(new javax.swing.plaf.basic.BasicButtonUI() {
             @Override
             public void paint(Graphics g, JComponent c) {
@@ -154,7 +154,7 @@ public class MainMenuUI extends JFrame {
 
                 JButton btn = (JButton) c;
                 
-                // Determine colors based on button state
+                
                 Color topColor, bottomColor;
                 if (btn.getModel().isPressed()) {
                     topColor = new Color(41, 128, 185);
@@ -167,17 +167,17 @@ public class MainMenuUI extends JFrame {
                     bottomColor = new Color(41, 128, 185);
                 }
 
-                // Draw gradient rounded rectangle
+                
                 GradientPaint gradient = new GradientPaint(0, 0, topColor, 0, btn.getHeight(), bottomColor);
                 g2d.setPaint(gradient);
                 g2d.fillRoundRect(0, 0, btn.getWidth(), btn.getHeight(), 15, 15);
 
-                // Draw border
+                
                 g2d.setColor(new Color(30, 100, 150));
                 g2d.setStroke(new BasicStroke(2));
                 g2d.drawRoundRect(1, 1, btn.getWidth() - 2, btn.getHeight() - 2, 15, 15);
 
-                // Draw text
+                
                 g2d.setColor(btn.getForeground());
                 g2d.setFont(btn.getFont());
                 FontMetrics fm = g2d.getFontMetrics();
@@ -198,11 +198,11 @@ public class MainMenuUI extends JFrame {
         GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
         
         if (device.getFullScreenWindow() == this) {
-            // Exit fullscreen
+            
             device.setFullScreenWindow(null);
             setResizable(true);
         } else {
-            // Enter fullscreen
+            
             setResizable(false);
             dispose();
             setUndecorated(true);
@@ -220,13 +220,13 @@ public class MainMenuUI extends JFrame {
         );
 
         if (gameName != null && !gameName.trim().isEmpty()) {
-            // Exit fullscreen before starting game
+            
             GraphicsDevice device = GraphicsEnvironment.getLocalGraphicsEnvironment().getDefaultScreenDevice();
             if (device.getFullScreenWindow() == this) {
                 device.setFullScreenWindow(null);
             }
             
-            // Close main menu and start game
+            
             dispose();
             SwingUtilities.invokeLater(() -> {
                 GameUI gameUI = new GameUI(gameName);

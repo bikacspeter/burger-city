@@ -1,6 +1,6 @@
 package game.core;
 
-//manages time with multiple speed settings: pause, normal (1x), fast (2x), very fast (4x).
+
 public class TimeManager {
 
     public enum TimeSpeed {
@@ -28,7 +28,7 @@ public class TimeManager {
 
     private TimeSpeed currentSpeed;
     private long totalTicks;
-    private double accumulatedGameTime; // in seconds
+    private double accumulatedGameTime; 
 
     public TimeManager() {
         this.currentSpeed = TimeSpeed.NORMAL;
@@ -36,9 +36,9 @@ public class TimeManager {
         this.accumulatedGameTime = 0.0;
     }
 
-    /**
-     * Restores time-related state from a save.
-     */
+    
+
+
     public void restore(TimeSpeed speed, long totalTicks, double accumulatedGameTimeSeconds) {
         if (speed == null) speed = TimeSpeed.NORMAL;
         this.currentSpeed = speed;
@@ -46,7 +46,7 @@ public class TimeManager {
         this.accumulatedGameTime = Math.max(0.0, accumulatedGameTimeSeconds);
     }
 
-    //Updates the game time based on real delta time and current speed multiplier.
+    
     public double update(double realDeltaSeconds) {
         double gameDelta = realDeltaSeconds * currentSpeed.getMultiplier();
         accumulatedGameTime += gameDelta;
@@ -84,27 +84,27 @@ public class TimeManager {
         return currentSpeed == TimeSpeed.PAUSED;
     }
 
-    /**
-     * Returns total game ticks elapsed (not affected by speed, only counts updates when not paused).
-     */
+    
+
+
     public long getTotalTicks() {
         return totalTicks;
     }
 
-    /**
-     * Returns accumulated game time in seconds (affected by speed multiplier).
-     */
+    
+
+
     public double getGameTimeSeconds() {
         return accumulatedGameTime;
     }
 
-    /**
-     * Returns game time formatted as days and hours.
-     * Assuming 1 game day = 120 real seconds at 1x speed.
-     */
+    
+
+
+
     public String getFormattedGameTime() {
         int totalGameSeconds = (int) accumulatedGameTime;
-        int secondsPerDay = 120; // 2 minutes = 1 game day
+        int secondsPerDay = 120; 
         int days = totalGameSeconds / secondsPerDay;
         int remainingSeconds = totalGameSeconds % secondsPerDay;
         int hours = (remainingSeconds * 24) / secondsPerDay;

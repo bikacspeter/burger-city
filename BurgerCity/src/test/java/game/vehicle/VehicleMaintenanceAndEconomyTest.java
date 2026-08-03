@@ -36,7 +36,7 @@ class VehicleMaintenanceAndEconomyTest {
         t.maintenanceSecondsRemaining = 0.5;
         t.secondsSinceMaintenance = 999.0;
 
-        // After maintenance, join at (2,0)
+        
         t.routePathTiles = List.of(new int[]{2, 0}, new int[]{1, 0}, new int[]{0, 0});
 
         t.update(map, 1.0);
@@ -82,14 +82,14 @@ class VehicleMaintenanceAndEconomyTest {
         city.getWaiting().add(ResourceType.PASSENGERS, 10);
         map.addCityForLoad(city);
 
-        // Road adjacent to city footprint
+        
         assertTrue(map.buildRoad(1, 3));
 
         Bus bus = new Bus();
         bus.spawnAt(1, 2);
         bus.setPath(List.of(new int[]{1, 3}));
 
-        // Simulate arrival onto (1,3)
+        
         bus.targetTileX = 1;
         bus.targetTileY = 3;
         bus.arriveAtTarget(map);
@@ -110,7 +110,7 @@ class VehicleMaintenanceAndEconomyTest {
         Industry ind = new Industry("Patty", IndustryType.PATTY_PLANT, 5, 5, 2, 2);
         map.addIndustryForLoad(ind);
 
-        assertTrue(map.buildRoad(4, 5)); // adjacent to industry
+        assertTrue(map.buildRoad(4, 5)); 
 
         Truck t = new Truck();
         t.spawnAt(4, 4);
@@ -127,7 +127,7 @@ class VehicleMaintenanceAndEconomyTest {
 
         assertNull(t.getCurrentCargo());
         assertEquals(4, ind.getStorage().get(ResourceType.MEAT));
-        // MEAT revenue is 8 per unit
+        
         assertEquals(32, player.getMoney());
     }
 
@@ -143,9 +143,9 @@ class VehicleMaintenanceAndEconomyTest {
         city.getDemandBacklog().add(ResourceType.WHEAT, 1);
         map.addCityForLoad(city);
 
-        // Build a simple connected road from farm-adjacent to city-adjacent
-        // Farm at (3..4,3..4) -> adjacent road at (3,2)
-        // City at (12..14,2..4) -> adjacent road at (11,2)
+        
+        
+        
         for (int x = 2; x <= 11; x++) {
             assertTrue(map.buildRoad(x, 2));
         }
@@ -164,7 +164,7 @@ class VehicleMaintenanceAndEconomyTest {
                 new int[]{11, 2}
         ));
 
-        // Simulate arrival onto the farm-adjacent road tile
+        
         t.targetTileX = 3;
         t.targetTileY = 2;
         t.arriveAtTarget(map);

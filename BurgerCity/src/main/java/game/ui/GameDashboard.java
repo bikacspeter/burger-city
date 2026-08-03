@@ -17,26 +17,26 @@ import javax.swing.border.TitledBorder;
 import java.awt.*;
 import java.util.List;
 
-/**
- * A live-updating dashboard panel that shows the full state of the game:
- * money, vehicles, cities, industries, production chains, and revenue info.
- */
+
+
+
+
 public class GameDashboard extends JPanel {
 
     private final Player player;
     private final Map map;
     private final List<Vehicle> vehicles;
 
-    // === Section panels (rebuilt every refresh) ===
+    
     private JPanel contentPanel;
     private JScrollPane scrollPane;
     private JLabel header;
 
-    // === Inspection: currently selected city or industry ===
+    
     private City inspectedCity;
     private Industry inspectedIndustry;
 
-    // Color palette
+    
     private static final Color BG_DARK = new Color(30, 30, 36);
     private static final Color BG_SECTION = new Color(42, 42, 50);
     private static final Color TEXT_PRIMARY = new Color(230, 230, 230);
@@ -56,7 +56,7 @@ public class GameDashboard extends JPanel {
         setBackground(BG_DARK);
         setPreferredSize(new Dimension(310, 0));
 
-        // Header
+        
         header = new JLabel("  \uD83D\uDCCA Játék vezérlőpult", SwingConstants.LEFT);
         header.setFont(new Font("SansSerif", Font.BOLD, 16));
         header.setForeground(ACCENT_GOLD);
@@ -65,7 +65,7 @@ public class GameDashboard extends JPanel {
         header.setBorder(new EmptyBorder(10, 5, 10, 5));
         add(header, BorderLayout.NORTH);
 
-        // Scrollable content area
+        
         contentPanel = new JPanel();
         contentPanel.setLayout(new BoxLayout(contentPanel, BoxLayout.Y_AXIS));
         contentPanel.setBackground(BG_DARK);
@@ -79,10 +79,10 @@ public class GameDashboard extends JPanel {
         add(scrollPane, BorderLayout.CENTER);
     }
 
-    /**
-     * Toggle the dashboard content visibility (collapse/expand).
-     * Returns true if dashboard is now visible.
-     */
+    
+
+
+
     public boolean toggleVisibility() {
         boolean nowVisible = !scrollPane.isVisible();
         scrollPane.setVisible(nowVisible);
@@ -96,29 +96,29 @@ public class GameDashboard extends JPanel {
         return scrollPane.isVisible();
     }
 
-    /**
-     * Show a detailed inspection panel for a specific city.
-     * Pass null to clear the inspection.
-     */
+    
+
+
+
     public void inspectCity(City city) {
         this.inspectedCity = city;
         this.inspectedIndustry = null;
         refresh();
     }
 
-    /**
-     * Show a detailed inspection panel for a specific industry.
-     * Pass null to clear the inspection.
-     */
+    
+
+
+
     public void inspectIndustry(Industry industry) {
         this.inspectedIndustry = industry;
         this.inspectedCity = null;
         refresh();
     }
 
-    /**
-     * Clear any active inspection and go back to the overview.
-     */
+    
+
+
     public void clearInspection() {
         this.inspectedCity = null;
         this.inspectedIndustry = null;
@@ -129,9 +129,9 @@ public class GameDashboard extends JPanel {
         return inspectedCity != null || inspectedIndustry != null;
     }
 
-    /**
-     * Called every game tick to refresh all dashboard data.
-     */
+    
+
+
     public void refresh() {
         if (!scrollPane.isVisible()) return;
 
@@ -139,7 +139,7 @@ public class GameDashboard extends JPanel {
 
         contentPanel.removeAll();
 
-        // If inspecting a specific building, show its detail view
+        
         if (inspectedCity != null) {
             contentPanel.add(buildInspectionHeader());
             contentPanel.add(Box.createVerticalStrut(6));
@@ -149,7 +149,7 @@ public class GameDashboard extends JPanel {
             contentPanel.add(Box.createVerticalStrut(6));
             contentPanel.add(buildIndustryDetailSection(inspectedIndustry));
         } else {
-            // Normal overview
+            
             contentPanel.add(buildFinanceSection());
             contentPanel.add(Box.createVerticalStrut(6));
             contentPanel.add(buildVehicleSummarySection());
@@ -170,11 +170,11 @@ public class GameDashboard extends JPanel {
         contentPanel.revalidate();
         contentPanel.repaint();
 
-        // Restore scroll position
+        
         SwingUtilities.invokeLater(() -> scrollPane.getVerticalScrollBar().setValue(scrollPos));
     }
 
-    // ─── Finance ────────────────────────────────────────────────────
+    
 
     private JPanel buildFinanceSection() {
         JPanel panel = createSection("\uD83D\uDCB0 Pénzügyek");
@@ -194,7 +194,7 @@ public class GameDashboard extends JPanel {
         return panel;
     }
 
-    // ─── Vehicles ───────────────────────────────────────────────────
+    
 
     private JPanel buildVehicleSummarySection() {
         JPanel panel = createSection("\uD83D\uDE8C Járművek (" + vehicles.size() + ")");
@@ -234,7 +234,7 @@ public class GameDashboard extends JPanel {
             addRow(panel, "   Áruk a fedélzeten:", String.valueOf(totalGoods), TEXT_SECONDARY);
         }
 
-        // Individual vehicle details
+        
         panel.add(Box.createVerticalStrut(4));
         int idx = 1;
         for (Vehicle v : vehicles) {
@@ -261,7 +261,7 @@ public class GameDashboard extends JPanel {
         return panel;
     }
 
-    // ─── Garages ───────────────────────────────────────────────────
+    
 
     private JPanel buildGaragesSection() {
         List<Garage> garages = map.getGarages();
@@ -345,7 +345,7 @@ public class GameDashboard extends JPanel {
         return "Áll";
     }
 
-    // ─── Cities ─────────────────────────────────────────────────────
+    
 
     private JPanel buildCitiesSection() {
         JPanel panel = createSection("\uD83C\uDFD9 Városok (" + map.getCities().size() + ")");
@@ -358,7 +358,7 @@ public class GameDashboard extends JPanel {
             addRow(panel, "   Utashozam:",
                 String.format("%.2f/s", city.getPassengersPerSecond()), TEXT_SECONDARY);
 
-            // Demand backlog
+            
             var backlog = city.getDemandBacklog().asUnmodifiableMap();
             if (!backlog.isEmpty()) {
                 for (var entry : backlog.entrySet()) {
@@ -367,7 +367,7 @@ public class GameDashboard extends JPanel {
                 }
             }
 
-            // Goods demand rates
+            
             var goodsRates = city.getGoodsPerSecond();
             for (var entry : goodsRates.entrySet()) {
                 addRow(panel, "   " + entry.getKey().getDisplayName() + " kereslet:",
@@ -378,7 +378,7 @@ public class GameDashboard extends JPanel {
         return panel;
     }
 
-    // ─── Industries ─────────────────────────────────────────────────
+    
 
     private JPanel buildIndustriesSection() {
         JPanel panel = createSection("\uD83C\uDFED Iparok (" + map.getIndustries().size() + ")");
@@ -393,7 +393,7 @@ public class GameDashboard extends JPanel {
             addRow(panel, "\u25A0 " + ind.getName(),
                     ind.getIndustryType().name() + " [" + prodPercent + "]", prodColor);
 
-            // Bemenetek
+            
             var inputs = ind.getProfile().getInputsPerUnit();
             if (inputs.isEmpty()) {
                 addRow(panel, "   Bemenetek:", "Nincs (nyersanyag-termelő)", TEXT_SECONDARY);
@@ -406,7 +406,7 @@ public class GameDashboard extends JPanel {
                 }
             }
 
-            // Kimenetek
+            
             var outputs = ind.getProfile().getOutputsPerUnit();
             for (var e : outputs.entrySet()) {
                 int stored = ind.getStorage().get(e.getKey());
@@ -422,7 +422,7 @@ public class GameDashboard extends JPanel {
         return panel;
     }
 
-    // ─── Supply Chain Overview ───────────────────────────────────────
+    
 
     private JPanel buildSupplyChainSection() {
         JPanel panel = createSection("\uD83D\uDD17 Ellátási lánc");
@@ -438,7 +438,7 @@ public class GameDashboard extends JPanel {
         return panel;
     }
 
-    // ─── Inspection Header (back button) ─────────────────────────────
+    
 
     private JPanel buildInspectionHeader() {
         JPanel panel = new JPanel(new BorderLayout());
@@ -460,12 +460,12 @@ public class GameDashboard extends JPanel {
         return panel;
     }
 
-    // ─── City Detail View ────────────────────────────────────────────
+    
 
     private JPanel buildCityDetailSection(City city) {
         JPanel panel = createSection("\uD83C\uDFD9 " + city.getName());
 
-        // General info
+        
         addRow(panel, "Népesség:", formatNumber(city.getPopulation()), ACCENT_BLUE);
         addRow(panel, "Hely:", "(" + city.getOriginX() + ", " + city.getOriginY() + ")", TEXT_SECONDARY);
         addRow(panel, "Méret:", city.getWidth() + " x " + city.getHeight() + " tiles", TEXT_SECONDARY);
@@ -485,14 +485,14 @@ public class GameDashboard extends JPanel {
             addInfoRow(panel, "  \u2713 Nincsenek várakozó utasok.", ACCENT_GREEN);
         }
 
-        // Revenue info for passengers
+        
         int passengerRevenue = ResourcePrices.revenuePerUnit(ResourceType.PASSENGERS);
         addRow(panel, "Passenger revenue:", passengerRevenue + "$ /unit", ACCENT_GREEN);
 
         panel.add(Box.createVerticalStrut(6));
         addSectionDivider(panel, "\uD83D\uDCE6 Goods Demand");
 
-        // Demand backlog
+        
         var backlog = city.getDemandBacklog().asUnmodifiableMap();
         if (backlog.isEmpty()) {
             addInfoRow(panel, "  No pending demand yet.", TEXT_SECONDARY);
@@ -508,7 +508,7 @@ public class GameDashboard extends JPanel {
             }
         }
 
-        // Goods demand rates
+        
         var goodsRates = city.getGoodsPerSecond();
         for (var entry : goodsRates.entrySet()) {
             addRow(panel, "  " + entry.getKey().getDisplayName() + " demand rate:",
@@ -522,7 +522,7 @@ public class GameDashboard extends JPanel {
         int trucksServing = 0;
         for (Vehicle v : vehicles) {
             if (!v.hasPath()) continue;
-            // Check if vehicle's path endpoints are adjacent to this city
+            
             if (isVehicleServingCity(v, city)) {
                 if (v instanceof Bus) busesServing++;
                 else if (v instanceof Truck) trucksServing++;
@@ -544,12 +544,12 @@ public class GameDashboard extends JPanel {
         return panel;
     }
 
-    // ─── Industry Detail View ────────────────────────────────────────
+    
 
     private JPanel buildIndustryDetailSection(Industry ind) {
         JPanel panel = createSection("\uD83C\uDFED " + ind.getName());
 
-        // General info
+        
         String prodPercent = String.format("%.0f%%", ind.getProductivity() * 100);
         Color prodColor = ind.getProductivity() >= 0.9 ? ACCENT_GREEN
                 : ind.getProductivity() >= 0.6 ? ACCENT_ORANGE : ACCENT_RED;
@@ -653,7 +653,7 @@ public class GameDashboard extends JPanel {
         return panel;
     }
 
-    // ─── Vehicle-Building proximity checks ───────────────────────────
+    
 
     private boolean isVehicleServingCity(Vehicle v, City city) {
         return isVehicleEndpointAdjacentTo(v, city.getOriginX(), city.getOriginY(),
@@ -685,7 +685,7 @@ public class GameDashboard extends JPanel {
     }
 
     private boolean isTileAdjacentToArea(int tx, int ty, int ox, int oy, int w, int h) {
-        // Check if tile (tx,ty) is directly adjacent to the rectangle [ox,oy,w,h]
+        
         for (int x = ox; x < ox + w; x++) {
             if ((tx == x && ty == oy - 1) || (tx == x && ty == oy + h)) return true;
         }
@@ -704,7 +704,7 @@ public class GameDashboard extends JPanel {
         parent.add(lbl);
     }
 
-    // ─── Price Table ────────────────────────────────────────────────
+    
 
     private JPanel buildPriceTableSection() {
         JPanel panel = createSection("\uD83D\uDCB5 Bevétel szállításonként");
@@ -720,7 +720,7 @@ public class GameDashboard extends JPanel {
 
 
 
-    // ─── Helpers ────────────────────────────────────────────────────
+    
 
     private JPanel createSection(String title) {
         JPanel panel = new JPanel();

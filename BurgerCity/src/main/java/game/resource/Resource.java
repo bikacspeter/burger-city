@@ -2,9 +2,9 @@ package game.resource;
 
 import java.util.Objects;
 
-/**
- * A typed quantity of cargo (goods or passengers).
- */
+
+
+
 public class Resource {
 
     private final ResourceType type;
@@ -40,10 +40,10 @@ public class Resource {
         amount += delta;
     }
 
-    /**
-     * Removes up to {@code delta} units.
-     * @return how much was actually removed
-     */
+    
+
+
+
     public int removeUpTo(int delta) {
         if (delta <= 0) return 0;
         int removed = Math.min(amount, delta);

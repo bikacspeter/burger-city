@@ -15,7 +15,7 @@ class TruckTest {
         truck = new Truck();
     }
 
-    // ==================== Constructor Tests ====================
+    
 
     @Test
     void testConstructorSetsSpeed() {
@@ -38,7 +38,7 @@ class TruckTest {
         assertTrue(truck instanceof Vehicle);
     }
 
-    // ==================== Can Carry Tests ====================
+    
 
     @Test
     void testCanCarryWheat() {
@@ -72,17 +72,17 @@ class TruckTest {
 
     @Test
     void testCanCarryHandlesNullResourceType() {
-        // Should handle null without crashing
+        
         try {
             boolean result = truck.canCarry(null);
-            // If it returns a value, passengers should be the only restricted type
+            
             assertTrue(result || result == false);
         } catch (NullPointerException e) {
-            // NPE is acceptable for null input
+            
         }
     }
 
-    // ==================== All Resource Type Tests ====================
+    
 
     @Test
     void testCanCarryAllNonPassengerResources() {
@@ -98,7 +98,7 @@ class TruckTest {
         }
     }
 
-    // ==================== Capacity Tests ====================
+    
 
     @Test
     void testTruckHasCorrectCapacity() {
@@ -111,7 +111,7 @@ class TruckTest {
         assertTrue(truck.capacity < advancedTruck.capacity);
     }
 
-    // ==================== Speed Tests ====================
+    
 
     @Test
     void testTruckSpeedIsSlowerThanBus() {
@@ -125,7 +125,7 @@ class TruckTest {
         assertTrue(truck.speed < advancedTruck.speed);
     }
 
-    // ==================== Maintenance Cost Tests ====================
+    
 
     @Test
     void testMaintenanceCostIsPositive() {
@@ -138,12 +138,12 @@ class TruckTest {
         assertTrue(truck.maintenanceCost > bus.maintenanceCost);
     }
 
-    // ==================== Type Specific Tests ====================
+    
 
     @Test
     void testTruckIsDistinctFromBus() {
         Bus bus = new Bus();
-        // Trucks and buses have opposite cargo restrictions
+        
         assertTrue(truck.canCarry(ResourceType.WHEAT));
         assertFalse(truck.canCarry(ResourceType.PASSENGERS));
         assertFalse(bus.canCarry(ResourceType.WHEAT));
@@ -152,15 +152,15 @@ class TruckTest {
 
     @Test
     void testTruckEffectiveSpeedEqualsSpeed() {
-        // EffectiveSpeed is set in parent constructor before subclass sets speed
-        // After first update it will match
-        assertEquals(2.0, truck.effectiveSpeed); // Default from Vehicle constructor
-        assertEquals(1, truck.speed); // Truck's speed
+        
+        
+        assertEquals(2.0, truck.effectiveSpeed); 
+        assertEquals(1, truck.speed); 
     }
 
     @Test
     void testTruckInheritsVehicleMethods() {
-        // Test that inherited methods work
+        
         truck.setPurchasePrice(1000);
         assertEquals(1000, truck.getPurchasePrice());
         assertEquals(500, truck.getSellValue());
@@ -188,25 +188,25 @@ class TruckTest {
     void testTruckAges() {
         truck.spawnAt(0, 0);
         double initialAge = truck.getAgeSeconds();
-        // Simulate some aging
+        
         truck.ageSeconds = 50.0;
         assertEquals(50.0, truck.getAgeSeconds());
         assertTrue(truck.getAgeSeconds() > initialAge);
     }
 
-    // ==================== Comparison Tests ====================
+    
 
     @Test
     void testTruckVsAdvancedTruckComparison() {
         AdvancedTruck advanced = new AdvancedTruck();
 
-        // Advanced truck should be better in speed and capacity
+        
         assertTrue(advanced.speed > truck.speed,
             "Advanced truck should be faster");
         assertTrue(advanced.capacity > truck.capacity,
             "Advanced truck should have more capacity");
 
-        // But both carry the same types
+        
         assertEquals(truck.canCarry(ResourceType.WHEAT),
             advanced.canCarry(ResourceType.WHEAT));
         assertEquals(truck.canCarry(ResourceType.PASSENGERS),

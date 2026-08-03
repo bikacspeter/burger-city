@@ -18,12 +18,12 @@ public class Industry {
     private final IndustryProfile profile;
     private final ResourceInventory storage;
 
-    // Smoothly varying multiplier in [0.4 .. 1.6]
+    
     private double productivity;
     private double unitRemainder;
     private final Random rng;
 
-    /** Minimum 2x2 */
+    
     public Industry(String name, IndustryType industryType, int originX, int originY, int width, int height) {
         this.name = name;
         this.industryType = industryType;
@@ -55,12 +55,12 @@ public class Industry {
         return profile.getInputsPerUnit().containsKey(type);
     }
 
-    /**
-     * Industry production tick.
-     *
-     * Outputs are accumulated in {@link #storage}. Inputs are consumed from the same storage,
-     * which is where deliveries should add resources.
-     */
+    
+
+
+
+
+
     public void update(double deltaSeconds) {
         if (deltaSeconds <= 0) return;
         if (profile.getBaseUnitsPerSecond() <= 0) {
@@ -78,13 +78,13 @@ public class Industry {
         int units = Math.min(requestedUnits, maxUnitsByInputs);
         if (units <= 0) return;
 
-        // Consume inputs.
+        
         for (var e : profile.getInputsPerUnit().entrySet()) {
             int need = e.getValue() * units;
             storage.removeUpTo(e.getKey(), need);
         }
 
-        // Produce outputs.
+        
         for (var e : profile.getOutputsPerUnit().entrySet()) {
             int out = e.getValue() * units;
             storage.add(e.getKey(), out);
@@ -93,16 +93,16 @@ public class Industry {
         unitRemainder -= units;
     }
 
-    /**
-     * Player/vehicle takes produced goods (or accumulated inputs) from the industry's storage.
-     */
+    
+
+
     public int takeFromStorage(ResourceType type, int maxAmount) {
         return storage.removeUpTo(type, maxAmount);
     }
 
-    /**
-     * Player/vehicle delivers goods to the industry's storage.
-     */
+    
+
+
     public void deliverToStorage(ResourceType type, int amount) {
         storage.add(type, amount);
     }
@@ -113,7 +113,7 @@ public class Industry {
     }
 
     private void updateProductivity(double deltaSeconds) {
-        // Slowly pull towards 1.0 and add small noise to avoid sudden jumps.
+        
         double pull = (1.0 - productivity) * (0.03 * deltaSeconds);
         double noise = (rng.nextDouble() * 2.0 - 1.0) * (0.02 * deltaSeconds);
         productivity = clamp(productivity + pull + noise, 0.4, 1.6);
@@ -139,7 +139,7 @@ public class Industry {
     private static IndustryProfile profileFor(IndustryType type) {
         if (type == null) type = IndustryType.FACTORY;
 
-        // The rates are intentionally low (units/sec) because the rest of the game runs at ~60 FPS.
+        
         return switch (type) {
             case FARM -> new IndustryProfile(
                     Map.of(),

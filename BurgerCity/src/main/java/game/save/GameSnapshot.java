@@ -6,11 +6,11 @@ import game.resource.ResourceType;
 import java.util.List;
 import java.util.Map;
 
-/**
- * Immutable snapshot of a running game state.
- *
- * This is a DTO designed for JSON persistence.
- */
+
+
+
+
+
 public record GameSnapshot(
         int version,
         String name,
@@ -38,10 +38,10 @@ public record GameSnapshot(
             List<ForestData> forests
     ) {}
 
-    /**
-     * Forest tile state (FOREST type + tree count).
-     * Trees are clamped to 0..4; values <=0 are treated as "no forest".
-     */
+    
+
+
+
     public record ForestData(int x, int y, int trees) {}
 
     public record CityData(

@@ -40,6 +40,43 @@ A Dashboardról leolvasott információk alapján nyomon tudjuk követni a ját�
 
 ![egy random játék](randomgame.png)
 
+## Telepítés és futtatás
+
+A projekt Java nyelven íródott, és Maven alapú felépítésű.
+
+Előfeltételek:
+- Java 21 vagy újabb
+- Maven telepítve
+
+Futtatás:
+1. Lépj a projekt gyökérkönyvtárába.
+2. Futtasd a következő parancsot a fordításhoz és a tesztek lefuttatásához:
+   `mvn test`
+3. A játék fő osztálya a `game.ui.GameUI`, amelyet a projektből indítva lehet elindítani.
+
+## Projekt szerkezete
+
+A forráskód főbb részei:
+- `src/main/java/game/ui` – grafikus felület, dashboard, minimap, játéklogika UI része
+- `src/main/java/game/map` – térkép, mezők, városok, iparágak
+- `src/main/java/game/building` – épületek, utak, garázsok, közlekedési lámpák
+- `src/main/java/game/vehicle` – járművek és útvonalak
+- `src/test/java` – JUnit tesztek
+
+## Játékmenet vezérlése
+
+A játék során a következő alapvető műveletek használhatók:
+- egér kattintás – építés, kiválasztás, információ megjelenítése
+- egér húzás – térkép görgetése
+- egérgörgő – nagyítás/kicsinyítés
+- dashboard – pénzügyi és operatív információk megtekintése
+
+## Fontos tudnivalók
+
+- A játék mentése ajánlott, különösen új játék indítása előtt.
+- A cél nem csak a gyors építkezés, hanem egy hatékony és nyereséges ellátási lánc kiépítése is.
+- A játékos feladata a termelés, szállítás és profit optimalizálása a hamburger előállítása érdekében.
+
 # Nézd meg a bemutató videót!
 
 [![Burger City Bemutató Videó](https://img.youtube.com/vi/6rbW4y7muXk/hqdefault.jpg)](https://youtu.be/6rbW4y7muXk)
